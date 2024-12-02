@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, status
 
 from App.domain.schemas.user_schema import (
-     LoginUser,
+     LoginUserSchema,
      GetPhoneNumber,
      LoginResponse
 )
@@ -26,7 +26,7 @@ class LoginService(BaseService):
         self.auth_service = auth_service
         self.hash_service = hash_service
 
-    async def LoginUser(self,detail:LoginUser):
+    async def LoginUser(self,detail:LoginUserSchema):
         
         if not await self.user_service.get_user_with_phone_number(GetPhoneNumber(phone_number=detail.phone_number)):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="کاربر با این شماره تلفن یافت نشد. لطفاً برای ادامه ثبت‌ نام کنید")

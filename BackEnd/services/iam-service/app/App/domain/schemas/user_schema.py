@@ -30,9 +30,6 @@ class UserRegister(GetPhoneNumber,GetPassword):
     pass
 
 
-class LoginUser(CreateUser):
-    pass
-
 class RegisterStepOne(BaseModel):
     message:str
     
@@ -45,7 +42,7 @@ class VerifyOTPSchema(CreateUser):
 class RegisterStepThree(RegisterStepOne):
     Token: str
     
-class LoginUser(GetPassword,GetPhoneNumber):
+class LoginUserSchema(GetPassword,GetPhoneNumber):
     pass
 
 class LoginResponse(RegisterStepThree):
