@@ -34,8 +34,8 @@ services:
       - ../infra/efk-stack/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
       - ../infra/efk-stack/parser_json.conf:/fluent-bit/etc/parser_json.conf
       - ../services/iam-service/logs:/fluent-bit/logs/iam
-      # - ../services/media-service/logs:/fluent-bit/logs/media
-      # - ../services/ocr-service/logs:/fluent-bit/logs/ocr
+      - ../services/media-service/logs:/fluent-bit/logs/media
+      - ../services/ocr-service/logs:/fluent-bit/logs/ocr
     networks:
       - efk-network
       - app-network

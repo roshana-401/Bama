@@ -5,11 +5,9 @@ from .hash_service import HashService
 from ..user_service import UserService
 from fastapi import status,HTTPException,Depends
 from jwt.exceptions import InvalidTokenError
-from fastapi.security import OAuth2PasswordBearer
 from ..base_service import BaseService
 from App.domain.schemas.token_schema import TokenData
 
-oauth2_scheme=OAuth2PasswordBearer(tokenUrl="login")
 
 class AuthService(BaseService):
 
