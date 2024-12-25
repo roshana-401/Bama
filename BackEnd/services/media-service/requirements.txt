@@ -13,3 +13,4 @@ aiobreaker
 pydantic_mongo
 pytest
 requests
+pytest_asyncio 

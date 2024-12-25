@@ -1,8 +1,9 @@
-from fastapi import status,Depends,APIRouter,UploadFile,HTTPException,File,Form
+from fastapi import status,Depends,APIRouter,UploadFile,HTTPException,File,Form,Query
 from typing import List,Annotated
 from uuid import UUID
 from App.Service.auth_service import getUser
 from fastapi.responses import StreamingResponse
+from bson import ObjectId
 from App.domain.schemas.Media_schema import (
     MediaResponse
 )
@@ -19,7 +20,8 @@ router=APIRouter(
     prefix='/Media/Car'
 )
     
-ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"]    
+ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg","image/jpg", "image/png", "image/webp"]    
+MAX_FILE_SIZE = 5 * 1024 * 1024 
 
 @router.post(
     "/UploadMediaCar", response_model=MediaResponse, status_code=status.HTTP_201_CREATED
@@ -33,7 +35,13 @@ async def upload_media(
     if file.content_type not in ALLOWED_IMAGE_MIME_TYPES:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="فقط فایل‌های تصویری با پسوند .jpegو .png و .webp مجاز هستند"
+            detail="فقط فایل‌های تصویری با پسوند .jpegو jpg و.png و .webp مجاز هستند"
+        )
+    file_size = len(await file.read())
+    if file_size > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"است MBحجم فایل بیشتر از حد مجاز است. حداکثر حجم مجاز 5",
         )
 
     print("okoko")
@@ -42,7 +50,7 @@ async def upload_media(
     #request to cor to this user is owner this posts or not
     
         
-@router.get("/GetMediaCar",response_class=StreamingResponse,status_code=status.HTTP_200_OK)
+@router.post("/GetMediaCar",response_class=StreamingResponse,status_code=status.HTTP_200_OK)
 
 async def GetMedia(mongo_id:GetPictureCar,
                        media_service: Annotated[MediaServiceCar, Depends()],
@@ -61,17 +69,18 @@ async def GetMedia(mongo_id:GetPictureCar,
 
 @router.delete("/DeleteMediaCar",response_model=massageCar,status_code=status.HTTP_200_OK)
 
-async def DeleteMedia(mongo_id:deletePictureCar,
+async def DeleteMedia(mongo_id:str,
                        media_service: Annotated[MediaServiceCar, Depends()],
                        informationUser: Annotated[dict, Depends(getUser)]):
-    
-    massage=await media_service.delete_madia_car(mongo_id=mongo_id.mongo_id,user_id=informationUser["user_id"])
+    if not ObjectId.is_valid(mongo_id):
+            raise HTTPException(status_code=400, detail="فرمت اشتباه است")
+    massage=await media_service.delete_madia_car(mongo_id=ObjectId(mongo_id),user_id=informationUser["user_id"])
     
     return massageCar(massage=massage["massage"])  
 
 
 
-@router.get("/GetAllMediaIdCar",status_code=status.HTTP_200_OK)
+@router.post("/GetAllMediaIdCar",status_code=status.HTTP_200_OK)
 
 async def GetAllMediaId(car:GetAllMedia,
                        media_service: Annotated[MediaServiceCar, Depends()],

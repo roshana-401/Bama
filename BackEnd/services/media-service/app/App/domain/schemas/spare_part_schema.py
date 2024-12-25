@@ -3,7 +3,6 @@ from pydantic_mongo import PydanticObjectId
 from uuid import UUID
     
 class GetPictureSpare(BaseModel):
-    
     mongo_id:PydanticObjectId
 
 class massageSparePart(BaseModel):

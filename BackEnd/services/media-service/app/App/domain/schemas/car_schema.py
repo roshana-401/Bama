@@ -3,7 +3,6 @@ from pydantic_mongo import PydanticObjectId
 from uuid import UUID
     
 class GetPictureCar(BaseModel):
-    
     mongo_id:PydanticObjectId
 
 class deletePictureCar(GetPictureCar):
