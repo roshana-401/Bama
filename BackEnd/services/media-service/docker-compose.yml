@@ -18,9 +18,9 @@ services:
     environment:
       - DATABASE_URL=mongodb://mongo:27017
       - DATABASE_NAME=AIToolsBoxMediaDB
-      - FILE_STORAGE_PATH=app/media
-      - IAM_URL=http://iam
-      - GRPC_PORT=50051
+      # - FILE_STORAGE_PATH=app/media
+      # - IAM_URL=http://iam
+      # - GRPC_PORT=50051
     networks:
       - app-network
     labels:

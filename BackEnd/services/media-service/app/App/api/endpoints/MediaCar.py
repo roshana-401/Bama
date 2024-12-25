@@ -13,7 +13,6 @@ from App.domain.schemas.car_schema import (
     GetAllMedia
 )
 from App.Service.media_service import MediaServiceCar
-import json
 
 router=APIRouter(
     tags=["CarMedia"],
@@ -29,7 +28,7 @@ async def upload_media(
     file: Annotated[UploadFile, File()],
     car_sell_id:Annotated[UUID, Form()],
     media_service: Annotated[MediaServiceCar, Depends()],
-    informationUser: Annotated[json, Depends(getUser)],
+    informationUser: Annotated[dict, Depends(getUser)],
 ):
     if file.content_type not in ALLOWED_IMAGE_MIME_TYPES:
         raise HTTPException(
@@ -45,9 +44,9 @@ async def upload_media(
         
 @router.get("/GetMediaCar",response_class=StreamingResponse,status_code=status.HTTP_200_OK)
 
-async def registerUser(mongo_id:GetPictureCar,
+async def GetMedia(mongo_id:GetPictureCar,
                        media_service: Annotated[MediaServiceCar, Depends()],
-                       informationUser: Annotated[json, Depends(getUser)],):
+                       informationUser: Annotated[dict, Depends(getUser)],):
     media, file = await media_service.get_madia_car(
         mongo_id=mongo_id.mongo_id, user_id=informationUser["user_id"]
     )
@@ -62,9 +61,9 @@ async def registerUser(mongo_id:GetPictureCar,
 
 @router.delete("/DeleteMediaCar",response_model=massageCar,status_code=status.HTTP_200_OK)
 
-async def registerUser(mongo_id:deletePictureCar,
+async def DeleteMedia(mongo_id:deletePictureCar,
                        media_service: Annotated[MediaServiceCar, Depends()],
-                       informationUser: Annotated[json, Depends(getUser)]):
+                       informationUser: Annotated[dict, Depends(getUser)]):
     
     massage=await media_service.delete_madia_car(mongo_id=mongo_id.mongo_id,user_id=informationUser["user_id"])
     
@@ -74,9 +73,9 @@ async def registerUser(mongo_id:deletePictureCar,
 
 @router.get("/GetAllMediaIdCar",status_code=status.HTTP_200_OK)
 
-async def registerUser(car:GetAllMedia,
+async def GetAllMediaId(car:GetAllMedia,
                        media_service: Annotated[MediaServiceCar, Depends()],
-                       informationUser: Annotated[json, Depends(getUser)],):
+                       informationUser: Annotated[dict, Depends(getUser)],):
     return await media_service.get_all_madia_car(
         car_sell_id=str(car.sell_car_id),user_id=informationUser["user_id"]
     )

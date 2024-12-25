@@ -14,5 +14,4 @@ router=APIRouter(
 @router.get("/TokenVerify",response_model=UserSchema,status_code=status.HTTP_200_OK)
 
 async def Me(user_current:users=Depends(verify_token)):
-    print("dndjnjenj")
     return user_current

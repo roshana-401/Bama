@@ -13,7 +13,6 @@ from App.domain.schemas.Media_schema import (
     MediaResponse
 )
 from App.Service.media_service import MediaServiceSpareParts
-import json
 
 router=APIRouter(
     tags=["SparePartsMedia"],
@@ -30,7 +29,7 @@ async def upload_media(
     file: Annotated[UploadFile, File()],
     spare_part_sell_id:Annotated[UUID, Form()],
     media_service: Annotated[MediaServiceSpareParts, Depends()],
-    informationUser: Annotated[json, Depends(getUser)],
+    informationUser: Annotated[dict, Depends(getUser)],
 ):
     if file.content_type not in ALLOWED_IMAGE_MIME_TYPES:
         raise HTTPException(
@@ -38,7 +37,6 @@ async def upload_media(
             detail="فقط فایل‌های تصویری با پسوند .jpegو .png و .webp مجاز هستند"
         )
 
-    print("okoko")
     return await media_service.create_media_sparePart(file, informationUser["user_id"],sell_spareparts_id=str(spare_part_sell_id))
 
     #request to cor to this user is owner this posts or not
@@ -46,9 +44,9 @@ async def upload_media(
     
 @router.get("/GetMediaSparePart",response_class=StreamingResponse,status_code=status.HTTP_200_OK)
 
-async def registerUser(mongo_id:GetPictureSpare,
+async def GetMedia(mongo_id:GetPictureSpare,
                        media_service: Annotated[MediaServiceSpareParts, Depends()],
-                       informationUser: Annotated[json, Depends(getUser)],):
+                       informationUser: Annotated[dict, Depends(getUser)],):
     media, file = await media_service.get_madia_sparePart(
         mongo_id=mongo_id.mongo_id, user_id=informationUser["user_id"]
     )
@@ -62,9 +60,9 @@ async def registerUser(mongo_id:GetPictureSpare,
 
 @router.delete("/DeleteMediaSparePart",response_model=massageSparePart,status_code=status.HTTP_200_OK)
 
-async def registerUser(mongo_id:deletePictureSpare,
+async def DeleteMedia(mongo_id:deletePictureSpare,
                        media_service: Annotated[MediaServiceSpareParts, Depends()],
-                       informationUser: Annotated[json, Depends(getUser)]):
+                       informationUser: Annotated[dict, Depends(getUser)]):
     
     massage=await media_service.delete_madia_sparePart(mongo_id=mongo_id.mongo_id,user_id=informationUser["user_id"])
     
@@ -73,9 +71,9 @@ async def registerUser(mongo_id:deletePictureSpare,
 
 @router.get("/GetAllMediaIdSpareParts",status_code=status.HTTP_200_OK)
 
-async def registerUser(sparepart:GetAllMedia,
+async def GetAllMediaId(sparepart:GetAllMedia,
                        media_service: Annotated[MediaServiceSpareParts, Depends()],
-                       informationUser: Annotated[json, Depends(getUser)]):
+                       informationUser: Annotated[dict, Depends(getUser)]):
     return await media_service.get_all_madia_spareParts(
         sell_spareparts_id=str(sparepart.sell_spareparts_id),user_id=informationUser["user_id"]
     )

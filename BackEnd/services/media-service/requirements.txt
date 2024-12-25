@@ -10,4 +10,6 @@ pydantic_core
 httpx
 tenacity
 aiobreaker
-loguru
+pydantic_mongo
+pytest
+requests
