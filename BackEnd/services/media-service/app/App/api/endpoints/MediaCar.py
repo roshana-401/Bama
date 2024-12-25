@@ -7,7 +7,10 @@ from App.domain.schemas.Media_schema import (
     MediaResponse
 )
 from App.domain.schemas.car_schema import (
-    GetPictureCar
+    GetPictureCar,
+    deletePictureCar,
+    massageCar,
+    GetAllMedia
 )
 from App.Service.media_service import MediaServiceCar
 import json
@@ -16,14 +19,6 @@ router=APIRouter(
     tags=["CarMedia"],
     prefix='/Media/Car'
 )
-
-# @router.get("/GetPicture",status_code=status.HTTP_200_OK)
-
-# async def GetPictureCars(
-#     # car:GetPictureCar,
-#     informationUser: Annotated[json, Depends(getUser)],
-# ):
-#     print(informationUser["date_update_Profile"])
     
 ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"]    
 
@@ -65,20 +60,27 @@ async def registerUser(mongo_id:GetPictureCar,
     )
 
 
+@router.delete("/DeleteMediaCar",response_model=massageCar,status_code=status.HTTP_200_OK)
+
+async def registerUser(mongo_id:deletePictureCar,
+                       media_service: Annotated[MediaServiceCar, Depends()],
+                       informationUser: Annotated[json, Depends(getUser)]):
+    
+    massage=await media_service.delete_madia_car(mongo_id=mongo_id.mongo_id,user_id=informationUser["user_id"])
+    
+    return massageCar(massage=massage["massage"])  
 
 
 
+@router.get("/GetAllMediaIdCar",status_code=status.HTTP_200_OK)
 
-# @router.post("/AddPicture",response_model=RegisterStepTwo,status_code=status.HTTP_200_OK)
+async def registerUser(car:GetAllMedia,
+                       media_service: Annotated[MediaServiceCar, Depends()],
+                       informationUser: Annotated[json, Depends(getUser)],):
+    return await media_service.get_all_madia_car(
+        car_sell_id=str(car.sell_car_id),user_id=informationUser["user_id"]
+    )
 
-# async def registerUser(user:VerifyOTPSchema,RegisterService:Annotated[RegisterService,Depends()]):
-#     return await RegisterService.verify_user(user)
 
-
-# @router.delete("/DeletePicture",response_model=RegisterStepThree,status_code=status.HTTP_201_CREATED)
-
-# async def registerUser(user:UserRegister,RegisterService:Annotated[RegisterService,Depends()]):
-#     return await RegisterService.create_user(user)
-        
 
 

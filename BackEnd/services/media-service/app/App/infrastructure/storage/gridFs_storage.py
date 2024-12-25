@@ -25,7 +25,8 @@ class GridFsStorageForCar:
         await self.init_fs()
         grid=self.gridFs.open_upload_stream(
             filename=file.filename,
-            metadata={"content_type":file.content_type}
+            metadata={"content_type":file.content_type},
+            
         )
         await grid.write(await file.read())
         await grid.close()
@@ -35,13 +36,12 @@ class GridFsStorageForCar:
     async def get_file(self,grid_id:ObjectId):
         await self.init_fs()
         file_object=await self.gridFs.open_download_stream(file_id=grid_id)
-        print("dddjnej")
         return await file_object.read()
     
     async def delete_file(self,grid_id:ObjectId):
         await self.init_fs()
-        await self.gridFs.delete(file_id=grid_id)
-        return {"massage":"Data deleted successfully"}
+        await self.gridFs.delete(grid_id)
+        return {"massage":"رسانه با موفقیت حذف شد"}
     
 class GridFsStorageForSpareParts:
     def __init__(self,db: Annotated[AsyncIOMotorClient, Depends(get_db)]) -> None:
@@ -71,6 +71,6 @@ class GridFsStorageForSpareParts:
     async def delete_file(self,grid_id:ObjectId):
         await self.init_fs()
         await self.gridFs.delete(file_id=grid_id)
-        return {"massage":"Data deleted successfully"}
+        return {"massage":"رسانه با موفقیت حذف شد"}
     
     

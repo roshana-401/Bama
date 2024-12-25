@@ -12,6 +12,9 @@ from App.domain.models.MediaModel import (
     MediaGridFs,
     MediaModelSpareParts
 )
+import base64
+from fastapi.responses import StreamingResponse
+from io import BytesIO
 from App.domain.schemas.Media_schema import MediaResponse
 
 class MediaServiceCar:
@@ -40,57 +43,23 @@ class MediaServiceCar:
             size=str(file.size),
             massage="رسانه با موفیت ذخیره شد"
         )
-        
-#     async def all_media_car(self,car_sell_id:str,user_id:str):
-#         all_media:List[MediaModelCar]=await self.media_response.get_all_car(car_sell_id)
-#         print(all_media)
-#         if all_media==[]:
-#             raise HTTPException(
-#                 status_code=status.HTTP_404_NOT_FOUND, detail="رسانه ایی یافت نشد"
-#             )
-#         for media in all_media:
-#             if media.user_id!=user_id:
-#                  raise HTTPException(
-#                 status_code=status.HTTP_403_FORBIDDEN,
-#                 detail="کاربر اجازه دسترسی به این رسانه را ندارد",
-#             )
-#         all_file=[]
-        
-#         for media in all_media:
-#             file=await  self.storage.get_file(media.storage_id)
-#             all_file.append([media,file])
-#         print(all_file)
-#         return all_file
        
-#     async def get_all_madia_car(self,car_sell_id:str,user_id:str):
-#         all_file=await self.all_media_car(car_sell_id,user_id)
+    async def get_all_madia_car(self,car_sell_id:str,user_id:str):
+        return await self.media_response.get_all_car(car_sell_id,user_id)
+                
+    async def media_car(self,mongo_id:ObjectId,user_id:str):
+        media=await self.media_response.get_car(mongo_id)
         
-#         def file_stream(file):
-#             yield file
-            
-#         return [
-#                 [MediaModel(**information[0]), file_stream(information[1])]
-#                 for information in all_file
-#         ]        
-        
-    async def media_car(self,mongo_id:str,user_id:str):
-        print("get car")
-        media:MediaModelCar=await self.media_response.get_car(mongo_id)
-        print("goooo")
-       
         if media.user_id!=user_id:
                  raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="کاربر اجازه دسترسی به این رسانه را ندارد",
-        )
-        print("get info")
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="کاربر اجازه دسترسی به این رسانه را ندارد",
+                    )
         file=await  self.storage.get_file(media.storage_id)
         return file ,media
        
-    async def get_madia_car(self,mongo_id:str,user_id:str):
-        print("go to media")
+    async def get_madia_car(self,mongo_id:ObjectId,user_id:str):
         file , media=await self.media_car(mongo_id,user_id)
-        print("exit from media")
         def file_stream():
             yield file
                 
@@ -103,7 +72,14 @@ class MediaServiceCar:
                         user_id=user_id    
                     ),
                     file_stream
-        ]        
+        ]      
+        
+    async def delete_madia_car(self,mongo_id:ObjectId,user_id:str):
+        media=await self.media_response.get_car(mongo_id)
+        await self.media_response.delete_car(mongo_id,user_id)
+        return await self.storage.delete_file(media.storage_id)
+        
+                
         
 class MediaServiceSpareParts:
     
@@ -132,40 +108,14 @@ class MediaServiceSpareParts:
             massage="رسانه با موفیت ذخیره شد"
         )
         
-#     async def all_media_sparePart(self,sell_spareparts_id:str,user_id:str):
-#         all_media:List[MediaModelSpareParts]=await self.media_response.get_all_sparePart(sell_spareparts_id)
-#         print(all_media)
-#         if all_media==[]:
-#             raise HTTPException(
-#                 status_code=status.HTTP_404_NOT_FOUND, detail="رسانه ایی یافت نشد"
-#             )
-#         for media in all_media:
-#             if media.user_id!=user_id:
-#                  raise HTTPException(
-#                 status_code=status.HTTP_403_FORBIDDEN,
-#                 detail="کاربر اجازه دسترسی به این رسانه را ندارد",
-#             )
-#         all_file=[]
-        
-#         for media in all_media:
-#             file=await  self.storage.get_file(media.storage_id)
-#             all_file.append([media,file])
-#         print(all_file)
-#         return all_file
-       
-#     async def get_all_madia_sparePart(self,sell_spareparts_id:str,user_id:str):
-#         all_file=await self.all_media_sparePart(sell_spareparts_id,user_id)
-        
-#         def file_stream(file):
-#             yield file
-            
-#         return [
-#                 [MediaModel(**information[0]), file_stream(information[1])]
-#                 for information in all_file
-#         ]        
+    async def delete_madia_sparePart(self,mongo_id:ObjectId,user_id:str):
+        media=await self.media_response.get_sparePart(mongo_id)
+        await self.media_response.delete_sparePart(mongo_id,user_id)
+        return await self.storage.delete_file(media.storage_id)
+     
         
     async def media_sparePart(self,mongo_id:ObjectId,user_id:str):
-        media:MediaModelSpareParts=await self.media_response.get_sparePart(mongo_id)
+        media=await self.media_response.get_sparePart(mongo_id)
         if media.user_id!=user_id:
                  raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -174,7 +124,8 @@ class MediaServiceSpareParts:
         
         file=await self.storage.get_file(media.storage_id)
         return file,media
-       
+    async def get_all_madia_spareParts(self,sell_spareparts_id:str,user_id:str):
+        return await self.media_response.get_all_spareParts(sell_spareparts_id,user_id)   
     async def get_madia_sparePart(self,mongo_id:ObjectId,user_id:str):
             file,media=await self.media_sparePart(mongo_id,user_id)
             

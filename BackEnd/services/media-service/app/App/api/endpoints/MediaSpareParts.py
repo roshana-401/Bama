@@ -4,7 +4,10 @@ from uuid import UUID
 from App.Service.auth_service import getUser
 from fastapi.responses import StreamingResponse
 from App.domain.schemas.spare_part_schema import (
-    GetPictureSpare
+    GetPictureSpare,
+    massageSparePart,
+    deletePictureSpare,
+    GetAllMedia
 )
 from App.domain.schemas.Media_schema import (
     MediaResponse
@@ -57,28 +60,25 @@ async def registerUser(mongo_id:GetPictureSpare,
         },
     )    
 
+@router.delete("/DeleteMediaSparePart",response_model=massageSparePart,status_code=status.HTTP_200_OK)
 
-
-# @router.get("/GetPicture",status_code=status.HTTP_200_OK)
-
-# async def GetPictureCar(
-#     car:GetPictureCar,
-#     informationUser: Annotated[json, Depends(getUser)],
-# ):
-#     print(informationUser["date_update_Profile"])
-    #request to cor to this user is owner this posts or not
+async def registerUser(mongo_id:deletePictureSpare,
+                       media_service: Annotated[MediaServiceSpareParts, Depends()],
+                       informationUser: Annotated[json, Depends(getUser)]):
     
-
-# @router.post("/AddPicture",response_model=RegisterStepTwo,status_code=status.HTTP_200_OK)
-
-# async def registerUser(user:VerifyOTPSchema,RegisterService:Annotated[RegisterService,Depends()]):
-#     return await RegisterService.verify_user(user)
+    massage=await media_service.delete_madia_sparePart(mongo_id=mongo_id.mongo_id,user_id=informationUser["user_id"])
+    
+    return massageSparePart(massage=massage["massage"])  
 
 
-# @router.delete("/DeletePicture",response_model=RegisterStepThree,status_code=status.HTTP_201_CREATED)
+@router.get("/GetAllMediaIdSpareParts",status_code=status.HTTP_200_OK)
 
-# async def registerUser(user:UserRegister,RegisterService:Annotated[RegisterService,Depends()]):
-#     return await RegisterService.create_user(user)
+async def registerUser(sparepart:GetAllMedia,
+                       media_service: Annotated[MediaServiceSpareParts, Depends()],
+                       informationUser: Annotated[json, Depends(getUser)]):
+    return await media_service.get_all_madia_spareParts(
+        sell_spareparts_id=str(sparepart.sell_spareparts_id),user_id=informationUser["user_id"]
+    )
         
 
 
