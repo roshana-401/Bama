@@ -7,10 +7,11 @@ grpcio-tools
 pydantic
 pydantic-settings
 pydantic_core
-httpx
+httpx==0.27.2
 tenacity
 aiobreaker
 pydantic_mongo
 pytest
 requests
 pytest_asyncio 
+aiofiles

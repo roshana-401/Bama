@@ -21,7 +21,9 @@ router=APIRouter(
 )
     
 ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg","image/jpg", "image/png", "image/webp"]    
-MAX_FILE_SIZE = 5 * 1024 * 1024 
+# MAX_FILE_SIZE = 5 * 1024 * 1024 
+MAX_FILE_SIZE = 1 * 1024 * 1024 
+
 
 @router.post(
     "/UploadMediaCar", response_model=MediaResponse, status_code=status.HTTP_201_CREATED

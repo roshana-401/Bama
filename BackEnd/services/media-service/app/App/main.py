@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from App.api.endpoints import MediaCar
 from App.api.endpoints import MediaSpareParts
 from fastapi.middleware.cors import CORSMiddleware
-from App.core.db.database import db
 
 app=FastAPI()
 

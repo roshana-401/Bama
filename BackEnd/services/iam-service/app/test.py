@@ -4,7 +4,7 @@ from httpx import AsyncClient
 from fastapi import status
 import asyncio
 
-from App.main import app
+from app.App.main import app
 
 
 
@@ -13,7 +13,11 @@ async def get_mock_phoneNumber():
     rand=str(random.randint(1000, 9999))
     return f"0911786{rand}"
 
-
+@pytest_asyncio.fixture(autouse=True)
+async def client():
+    async with AsyncClient(app=app, base_url="http://iam.localhost") as ac:
+    # async with AsyncClient(app=app, base_url="http://127.0.0.1:8000") as ac:
+        yield ac
 
 
 @pytest.mark.asyncio
