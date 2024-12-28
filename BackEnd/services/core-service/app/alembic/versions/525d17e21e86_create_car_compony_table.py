@@ -28,7 +28,7 @@ def upgrade() -> None:
     op.create_table(
         'model',
         sa.Column('model_id', UUID(as_uuid=True), primary_key=True, nullable=False, server_default=text("gen_random_uuid()")),
-        sa.Column('model_name', sa.String(), nullable=False, unique=True),
+        sa.Column('model_name', sa.String(), nullable=False),
         sa.Column('car_compony_id', UUID(as_uuid=True), sa.ForeignKey('car_compony.car_compony_id', ondelete="CASCADE"), nullable=False)
     )
 

@@ -17,6 +17,7 @@ class CarComponyService(BaseService):
         self.car_compony_repository = car_compony_repository
         
     async def Add_car_compony(self,car:Add_car_compony):
+        self.car_compony_repository.get_car_compony_name(car.car_compony_name)
         car=car_compony(
             car_compony_name=car.car_compony_name
         )
@@ -29,7 +30,9 @@ class CarComponyService(BaseService):
         return massage(massage="شرکت خودرو مورد نظر با موفقیت حذف شد")
     
     async def update_car_compony(self,car_compony_id:UUID,newDetail:str):
-        self.car_compony_repository.update_car_compony(car_compony_id=car_compony_id,NewDetail=newDetail)
+        updated_car_compony=self.car_compony_repository.get_car_compony_id(car_compony_id=car_compony_id)
+        self.car_compony_repository.get_car_compony_name(newDetail)
+        self.car_compony_repository.update_car_compony(car_componyy=updated_car_compony,NewDetail=newDetail)
         return massage(massage="شرکت خودرو مورد نظر با موفقیت بروز شد")
     
     async def get_all_car_compony(self):

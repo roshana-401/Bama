@@ -25,7 +25,7 @@ class SellSpareParts(Base):
     date_create = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
     description=Column(String, nullable=True)
     city_id=Column(UUID(as_uuid=True), ForeignKey("ciry.city_id",ondelete="CASCADE"), nullable=False)
-    date_update = Column(TIMESTAMP(timezone=True), nullable=True, onupdate=func.now())
+    date_update = Column(TIMESTAMP(timezone=True), nullable=True)
     
     spare_parts=relationship("spare_parts")
     city=relationship("city")

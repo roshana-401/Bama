@@ -15,8 +15,6 @@ class ModelCarRepository:
         self.car_compony=car_compony
         
     def create_model_car(self,model_car:model):
-        self.get_model_car_name(model_car.model_name)
-        self.car_compony.get_car_compony_id(model_car.car_compony_id)
         self.db.add(model_car)
         self.db.commit()
         self.db.refresh(model_car)
@@ -27,13 +25,11 @@ class ModelCarRepository:
         model_car.delete(synchronize_session=False)
         self.db.commit()
     
-    def update_model_car(self,model_car_id:UUID,NewDetail:str):
+    def update_model_car(self,model_car:model,NewDetail:str):
         
-        updated_model_car=self.get_model_car_id(model_car_id=model_car_id)
-        self.get_model_car_name(NewDetail)
-        updated_model_car.update({"model_name":NewDetail},synchronize_session=False)
+        model_car.update({"model_name":NewDetail},synchronize_session=False)
         self.db.commit()
-        return updated_model_car.first()
+        return model_car.first()
 
     def get_model_car_id(self, model_car_id: UUID):
         model_car=self.db.query(model).filter(model.model_id==model_car_id)
@@ -42,8 +38,8 @@ class ModelCarRepository:
         return model_car
         
 
-    def get_model_car_name(self,name):
-        model_car_name=self.db.query(model).filter(model.model_name==name)
+    def get_model_car_name(self,name,car_compony_id:UUID):
+        model_car_name=self.db.query(model).filter(model.model_name==name,model.car_compony_id==car_compony_id)
         if model_car_name.first():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="مدل خودرویی با این نام موجود است")
         

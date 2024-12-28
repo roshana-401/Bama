@@ -15,8 +15,7 @@ class CityRepository:
         self.province_repository=province_repository
         
     def create_city(self,cityy:city):
-        self.get_city_name(cityy.city_name)
-        self.province_repository.get_province_id(cityy.province_id)
+
         self.db.add(cityy)
         self.db.commit()
         self.db.refresh(cityy)
@@ -27,13 +26,12 @@ class CityRepository:
         cityy.delete(synchronize_session=False)
         self.db.commit()
     
-    def update_city(self,city_id:UUID,NewDetail:str):
+    def update_city(self,cityy:city,NewDetail:str):
         
-        updated_city=self.get_city_id(city_id=city_id)
-        self.get_city_name(NewDetail)
-        updated_city.update({"city_name":NewDetail},synchronize_session=False)
+        
+        cityy.update({"city_name":NewDetail},synchronize_session=False)
         self.db.commit()
-        return updated_city.first()
+        return cityy.first()
 
     def get_city_id(self, city_id: UUID):
         cityy=self.db.query(city).filter(city.city_id==city_id)
@@ -42,8 +40,8 @@ class CityRepository:
         return cityy
         
 
-    def get_city_name(self,name):
-        city_name=self.db.query(city).filter(city.city_name==name)
+    def get_city_name(self,name,province_id:UUID):
+        city_name=self.db.query(city).filter(city.city_name==name,city.province_id==province_id)
         if city_name.first():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=" شهر با این نام موجود است")
         
@@ -60,6 +58,5 @@ class CityRepository:
         return city_name.first()
         
     def get_all_city(self,provincee_id:UUID):
-        self.province_repository.get_province_id(province_id=provincee_id)
         cities = self.db.query(city).filter(city.province_id==provincee_id)
         return [city_list(city_name=city.city_name,city_id=city.city_id) for city in cities]

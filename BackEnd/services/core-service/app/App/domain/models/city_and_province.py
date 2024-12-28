@@ -14,6 +14,8 @@ class city(Base):
     __tablename__ = "city"
 
     city_id = Column(UUID(as_uuid=True),primary_key=True,nullable=False,server_default=text("gen_random_uuid()"))
-    city_name = Column(String, unique=True, nullable=False)
+    city_name = Column(String, nullable=False)
     province_id = Column(UUID(as_uuid=True), ForeignKey("province.province_id",ondelete="CASCADE"), nullable=False)
     province=relationship("province")
+    
+    sell_cars = relationship("SellCar", back_populates="city")

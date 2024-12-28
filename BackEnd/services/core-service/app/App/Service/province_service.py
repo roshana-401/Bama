@@ -19,6 +19,7 @@ class ProvinceService(BaseService):
         provincce=province(
             province_name=provincee.province_name
         )
+        self.province_repository.get_province_name(provincee.province_name)        
         province_save=self.province_repository.create_province(provincce)
         return massage_province(massage=" استان مورد نظر با موفقیت اضافه شد",province_id=province_save.province_id)
 
@@ -28,7 +29,9 @@ class ProvinceService(BaseService):
         return massage(massage="استان مورد نظر با موفقیت حذف شد")
     
     async def update_province(self,province_id:UUID,newDetail:str):
-        self.province_repository.update_province(province_id=province_id,NewDetail=newDetail)
+        self.province_repository.get_province_name(newDetail)
+        provincee=self.province_repository.get_province_id(province_id)
+        self.province_repository.update_province(provincee=provincee,NewDetail=newDetail)
         return massage(massage=" استان مورد نظر با موفقیت بروز شد")
     
     async def get_all_province(self):

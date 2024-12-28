@@ -14,7 +14,6 @@ class ProvinceRepository:
         self.db=db
         
     def create_province(self,provincee:province):
-        self.get_province_name(provincee.province_name)
         self.db.add(provincee)
         self.db.commit()
         self.db.refresh(provincee)
@@ -25,13 +24,11 @@ class ProvinceRepository:
         provincee.delete(synchronize_session=False)
         self.db.commit()
     
-    def update_province(self,province_id:UUID,NewDetail:str):
+    def update_province(self,provincee:province,NewDetail:str):
         
-        updated_province=self.get_province_id(province_id=province_id)
-        self.get_province_name(NewDetail)
-        updated_province.update({"province_name":NewDetail},synchronize_session=False)
+        provincee.update({"province_name":NewDetail},synchronize_session=False)
         self.db.commit()
-        return updated_province.first()
+        return provincee.first()
 
     def get_province_id(self, province_id: UUID):
         provincee=self.db.query(province).filter(province.province_id==province_id)

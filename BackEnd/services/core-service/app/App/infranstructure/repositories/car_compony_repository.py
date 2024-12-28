@@ -14,7 +14,6 @@ class CarComponyRepository:
         self.db=db
         
     def create_car_compony(self,car:car_compony):
-        self.get_car_compony_name(car.car_compony_name)
         self.db.add(car)
         self.db.commit()
         self.db.refresh(car)
@@ -25,13 +24,11 @@ class CarComponyRepository:
         car.delete(synchronize_session=False)
         self.db.commit()
     
-    def update_car_compony(self,car_compony_id:UUID,NewDetail:str):
-        
-        updated_car_compony=self.get_car_compony_id(car_compony_id=car_compony_id)
-        self.get_car_compony_name(NewDetail)
-        updated_car_compony.update({"car_compony_name":NewDetail},synchronize_session=False)
+    def update_car_compony(self,car_componyy:car_compony,NewDetail:str):
+    
+        car_componyy.update({"car_compony_name":NewDetail},synchronize_session=False)
         self.db.commit()
-        return updated_car_compony.first()
+        return car_componyy.first()
 
     def get_car_compony_id(self, car_compony_id: UUID):
         car_componyy=self.db.query(car_compony).filter(car_compony.car_compony_id==car_compony_id)

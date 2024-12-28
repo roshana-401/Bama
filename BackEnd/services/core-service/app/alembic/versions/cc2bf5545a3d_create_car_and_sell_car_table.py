@@ -42,7 +42,7 @@ def upgrade() -> None:
         sa.Column('sell_car_id', UUID(as_uuid=True), nullable=False, server_default=sa.text("gen_random_uuid()"), primary_key=True),
         sa.Column('phone_number', sa.String(), nullable=False),
         sa.Column('user_id', UUID(as_uuid=True), nullable=False),
-        sa.Column('car_id', UUID(as_uuid=True), nullable=False),
+        sa.Column('car_id', UUID(as_uuid=True), sa.ForeignKey('car.car_id', ondelete="CASCADE"), nullable=False),
         sa.Column('date_create', sa.TIMESTAMP(timezone=True), nullable=False, server_default=sa.func.now()),
         sa.Column('description', sa.String(), nullable=True),
         sa.Column('city_id', UUID(as_uuid=True), nullable=False),
