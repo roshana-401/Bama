@@ -21,11 +21,9 @@ class GridFsStorageForCar:
             self.gridFs=AsyncIOMotorGridFSBucket(self.db,bucket_name="carGridFs")#GridFS production
     
     async def save_file(self,file:UploadFile):
-        print("saving")
         await self.init_fs()
         grid=self.gridFs.open_upload_stream(
-            filename=file.filename,
-            metadata={"content_type":file.content_type},
+            file.filename, metadata={"content_type": file.content_type}
             
         )
         await grid.write(await file.read())
@@ -55,17 +53,15 @@ class GridFsStorageForSpareParts:
     async def save_file(self,file:UploadFile):
         await self.init_fs()
         grid=self.gridFs.open_upload_stream(
-            filename=file.filename,
-            metadata={"content_type":file.content_type}
+            file.filename, metadata={"content_type": file.content_type}
         )
         await grid.write(await file.read())
         await grid.close()
         return grid._id
-    
+
     async def get_file(self,grid_id:ObjectId):
         await self.init_fs()
         file_object=await self.gridFs.open_download_stream(file_id=grid_id)
-        
         return await file_object.read()
     
     async def delete_file(self,grid_id:ObjectId):

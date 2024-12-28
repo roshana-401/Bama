@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from typing import Annotated
 import requests
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="http://iam_service:80/TokenVerify")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="http://iam_service:80/user/Login")
 
 
 async def getUser(

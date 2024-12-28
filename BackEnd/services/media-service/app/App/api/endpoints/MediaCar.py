@@ -29,7 +29,7 @@ MAX_FILE_SIZE = 1 * 1024 * 1024
     "/UploadMediaCar", response_model=MediaResponse, status_code=status.HTTP_201_CREATED
 )
 async def upload_media(
-    file: Annotated[UploadFile, File()],
+    file: UploadFile,
     car_sell_id:Annotated[UUID, Form()],
     media_service: Annotated[MediaServiceCar, Depends()],
     informationUser: Annotated[dict, Depends(getUser)],
@@ -39,14 +39,12 @@ async def upload_media(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="فقط فایل‌های تصویری با پسوند .jpegو jpg و.png و .webp مجاز هستند"
         )
-    file_size = len(await file.read())
-    if file_size > MAX_FILE_SIZE:
+    if file.size > MAX_FILE_SIZE or file.size==0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"است MBحجم فایل بیشتر از حد مجاز است. حداکثر حجم مجاز 5",
+            detail=f"است KBو حداقل حجم مجاز 5 MBحجم فایل غیر مجاز است. حداکثر حجم مجاز 5",
         )
 
-    print("okoko")
     return await media_service.create_media_car(file, informationUser["user_id"],car_sell_id=str(car_sell_id))
 
     #request to cor to this user is owner this posts or not
@@ -58,7 +56,7 @@ async def GetMedia(mongo_id:GetPictureCar,
                        media_service: Annotated[MediaServiceCar, Depends()],
                        informationUser: Annotated[dict, Depends(getUser)],):
     media, file = await media_service.get_madia_car(
-        mongo_id=mongo_id.mongo_id, user_id=informationUser["user_id"]
+        mongo_id=mongo_id.mongo_id, user_id=informationUser["user_id"],role_id=informationUser["role_id"]
     )
     return StreamingResponse(
         content=file(),
@@ -76,7 +74,7 @@ async def DeleteMedia(mongo_id:str,
                        informationUser: Annotated[dict, Depends(getUser)]):
     if not ObjectId.is_valid(mongo_id):
             raise HTTPException(status_code=400, detail="فرمت اشتباه است")
-    massage=await media_service.delete_madia_car(mongo_id=ObjectId(mongo_id),user_id=informationUser["user_id"])
+    massage=await media_service.delete_madia_car(mongo_id=ObjectId(mongo_id),user_id=informationUser["user_id"],role_id=informationUser["role_id"])
     
     return massageCar(massage=massage["massage"])  
 
@@ -86,9 +84,9 @@ async def DeleteMedia(mongo_id:str,
 
 async def GetAllMediaId(car:GetAllMedia,
                        media_service: Annotated[MediaServiceCar, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)],):
+                       informationUser: Annotated[dict, Depends(getUser)]):
     return await media_service.get_all_madia_car(
-        car_sell_id=str(car.sell_car_id),user_id=informationUser["user_id"]
+        car_sell_id=str(car.sell_car_id),user_id=informationUser["user_id"],role_id=informationUser["role_id"]
     )
 
 

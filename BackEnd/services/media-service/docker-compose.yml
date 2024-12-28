@@ -17,7 +17,7 @@ services:
     container_name: media_service
     environment:
       - DATABASE_URL=mongodb://mongo:27017
-      - DATABASE_NAME=AIToolsBoxMediaDB
+      - DATABASE_NAME=BamaMediaDB
       # - FILE_STORAGE_PATH=app/media
       # - IAM_URL=http://iam
       # - GRPC_PORT=50051

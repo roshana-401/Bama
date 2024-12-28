@@ -1,12 +1,14 @@
 from fastapi import FastAPI
-from App.api.endpoints import register
-from App.api.endpoints import login
-from App.api.endpoints import token
+from App.api.endpoints import car_compony
+from App.api.endpoints import model_car
+from App.api.endpoints import province
+from App.api.endpoints import city
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app=FastAPI()
 
-origins = ["*","http://127.0.0.1:8000"]
+origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -16,9 +18,10 @@ app.add_middleware(
 )
 
 
-app.include_router(register.router)
-app.include_router(login.router)
-app.include_router(token.router)
+app.include_router(car_compony.router)
+app.include_router(model_car.router)
+app.include_router(province.router)
+app.include_router(city.router)
 
 
 @app.get("/")
