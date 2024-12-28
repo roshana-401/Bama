@@ -1,6 +1,6 @@
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
-from App.domain.schemas.model_car_schema import (Add_model_car,massage_model_car,massage,model_car_id)
+from App.domain.schemas.model_car_schema import (Add_model_car,massage_model_car,massage,model_car_info)
 from App.domain.models.model_and_car_compony import model
 from App.infranstructure.repositories.model_car_repository import ModelCarRepository
 from App.Service.base_service import BaseService
@@ -37,6 +37,6 @@ class ModelCarService(BaseService):
         cars=self.model_car_repository.get_all_model_car(car_compony_id=car_compony_id)
         return cars
     
-    async def get_model_car_id(self,car_model_name:str):
-        cars=self.model_car_repository.get_model_car_id_by_name(car_model_name)
-        return model_car_id(model_id=cars.model_id)
+    async def get_model_car_id(self,car_model_id:UUID):
+        cars=self.model_car_repository.get_model_car_name_by_id(car_model_id)
+        return model_car_info(car_compony_name=cars.car_compony.car_compony_name,model_car_name=cars.model_name)

@@ -50,8 +50,14 @@ class ProvinceRepository:
         provinces = self.db.query(province).all()
         return [province_list.from_orm(province) for province in provinces]
     
+    def get_province_name_by_id(self,province_id:UUID):
+        province_name=self.db.query(province).filter(province.province_id==province_id)
+        if not province_name.first():
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=" استان با این شناسه موجود نیست")
+        return province_name.first()
+    
     def get_province_id_by_name(self,name):
         province_name=self.db.query(province).filter(province.province_name==name)
         if not province_name.first():
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=" استان با این شناسه موجود نیست")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=" استان با این نام موجود نیست")
         return province_name.first()

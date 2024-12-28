@@ -13,7 +13,9 @@ class get_city_id(BaseModel):
 
 class city_id(get_city_id):
     pass
-
+class city_info(get_name):
+    province_name:str
+    pass
 
 class Add_city(get_name,get_province_id):
     pass

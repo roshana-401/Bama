@@ -13,7 +13,9 @@ class get_model_car_id(BaseModel):
 
 class model_car_id(get_model_car_id):
     pass
-
+class model_car_info(get_name):
+    car_compony_name:str
+    
 
 class Add_model_car(get_name,get_car_compony_id):
     pass

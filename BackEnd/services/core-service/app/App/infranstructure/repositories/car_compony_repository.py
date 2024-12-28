@@ -50,8 +50,14 @@ class CarComponyRepository:
         cars = self.db.query(car_compony).all()
         return [car_compony_list.from_orm(car) for car in cars]
     
-    def get_car_compony_id_by_name(self,name):
-        car_compony_name=self.db.query(car_compony).filter(car_compony.car_compony_name==name)
+    def get_car_compony_name_by_id(self,id:UUID):
+        car_compony_name=self.db.query(car_compony).filter(car_compony.car_compony_id==id)
         if not car_compony_name.first():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="شرکت خودرویی با این شناسه موجود نیست")
+        return car_compony_name.first()
+    
+    def get_car_compony_id_by_name(self,name:str):
+        car_compony_name=self.db.query(car_compony).filter(car_compony.car_compony_name==name)
+        if not car_compony_name.first():
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="شرکت خودرویی با این نام موجود نیست")
         return car_compony_name.first()

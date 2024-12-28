@@ -2,6 +2,8 @@ from fastapi import status,Depends,APIRouter,HTTPException
 from typing import Annotated,List
 from App.Service.auth_service.auth_service import getUser
 from App.Service.city_service import CityService
+from App.Service.role_service import RoleService
+
 from uuid import UUID
 from App.domain.schemas.city_schema import (
     Add_city,
@@ -11,7 +13,7 @@ from App.domain.schemas.city_schema import (
     city_list,
     get_province_id,
     city_id,
-    get_name
+    city_info
 )
 
 router=APIRouter(
@@ -26,9 +28,10 @@ router=APIRouter(
 
 async def AddCity(cityy:Add_city,
                         cityService:Annotated[CityService, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
     
-    if informationUser["role_id"]!=1:
+    if informationUser["role_id"]!=await role.get_role_admin():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
 
     return await cityService.Add_city(cityy)
@@ -38,8 +41,9 @@ async def AddCity(cityy:Add_city,
 
 async def DeleteCity(city_id:str,
                         cityService:Annotated[CityService, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
-    if informationUser["role_id"]!=1:
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
+    if informationUser["role_id"]!=await role.get_role_admin():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
     try:
         city_id=UUID(city_id)
@@ -54,19 +58,20 @@ async def DeleteCity(city_id:str,
 
 async def UpdateCity(cityy:update_city,
                         cityService:Annotated[CityService, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
-    if informationUser["role_id"]!=1:
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
+    if informationUser["role_id"]!=await role.get_role_admin():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
     
     
     return await cityService.update_city(city_id=cityy.city_id,newDetail=cityy.city_name)
 
 
-@router.post("/getCityId",response_model=city_id,status_code=status.HTTP_200_OK)
+@router.post("/getCityId",response_model=city_info,status_code=status.HTTP_200_OK)
 
-async def getCityId(cityy:get_name,cityService:Annotated[CityService, Depends()]):
+async def getCityId(cityy:city_id,cityService:Annotated[CityService, Depends()]):
     
-    return await cityService.get_city_id(city_name=cityy.city_name)
+    return await cityService.get_city_id(city_id=cityy.city_id)
 
 
 

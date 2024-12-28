@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, TIMESTAMP, Enum, Integer, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func, text
-
+from sqlalchemy.orm import relationship
 from App.core.db.database import get_Base_Class
 Base=get_Base_Class()
 
@@ -16,3 +16,4 @@ class city(Base):
     city_id = Column(UUID(as_uuid=True),primary_key=True,nullable=False,server_default=text("gen_random_uuid()"))
     city_name = Column(String, unique=True, nullable=False)
     province_id = Column(UUID(as_uuid=True), ForeignKey("province.province_id",ondelete="CASCADE"), nullable=False)
+    province=relationship("province")

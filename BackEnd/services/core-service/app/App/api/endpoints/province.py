@@ -3,6 +3,8 @@ from typing import Annotated,List
 from App.Service.auth_service.auth_service import getUser
 from App.Service.province_service import ProvinceService
 from uuid import UUID
+from App.Service.role_service import RoleService
+
 from App.domain.schemas.province_schema import (
     Add_province,
     massage_province,
@@ -25,9 +27,10 @@ router=APIRouter(
 
 async def AddProvince(province:Add_province,
                         provinceService:Annotated[ProvinceService, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
     
-    if informationUser["role_id"]!=1:
+    if informationUser["role_id"]!=await role.get_role_admin():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
 
     return await provinceService.Add_province(province)
@@ -38,8 +41,9 @@ async def AddProvince(province:Add_province,
 
 async def DeleteProvince(province_id:str,
                         provinceService:Annotated[ProvinceService, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
-    if informationUser["role_id"]!=1:
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
+    if informationUser["role_id"]!=await role.get_role_admin():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
     try:
         province_id=UUID(province_id)
@@ -55,8 +59,9 @@ async def DeleteProvince(province_id:str,
 
 async def UpdateProvice(province:update_province,
                         provinceService:Annotated[ProvinceService, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
-    if informationUser["role_id"]!=1:
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
+    if informationUser["role_id"]!=await role.get_role_admin():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
     
     
@@ -72,10 +77,10 @@ async def getAllProvince(provinceService:Annotated[ProvinceService, Depends()]):
 
 
 
-@router.post("/getProvinceId",response_model=province_id,status_code=status.HTTP_200_OK)
+@router.post("/getProvinceId",response_model=get_name,status_code=status.HTTP_200_OK)
 
-async def getProvinceId(province:get_name,provinceService:Annotated[ProvinceService, Depends()]):
+async def getProvinceId(province:province_id,provinceService:Annotated[ProvinceService, Depends()]):
     
-    return await provinceService.get_province_id(province.province_name)
+    return await provinceService.get_province_id(province.province_id)
 
 

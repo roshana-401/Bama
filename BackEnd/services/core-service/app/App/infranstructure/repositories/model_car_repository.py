@@ -47,10 +47,16 @@ class ModelCarRepository:
         if model_car_name.first():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="مدل خودرویی با این نام موجود است")
         
+    def get_model_car_name_by_id(self,id:UUID):
+        model_car_name=self.db.query(model).filter(model.model_id==id)
+        if not model_car_name.first():
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="مدل خودرویی با این شناسه موجود نیست")
+        return model_car_name.first()
+    
     def get_model_car_id_by_name(self,name):
         model_car_name=self.db.query(model).filter(model.model_name==name)
         if not model_car_name.first():
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="مدل خودرویی با این شناسه موجود نیست")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="مدل خودرویی با این نام موجود نیست")
         return model_car_name.first()
         
     def get_all_model_car(self,car_compony_id:UUID):

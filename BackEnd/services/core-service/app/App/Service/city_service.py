@@ -1,6 +1,6 @@
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
-from App.domain.schemas.city_schema import (Add_city,massage_city,massage,city_id)
+from App.domain.schemas.city_schema import (Add_city,massage_city,massage,city_info)
 from App.domain.models.city_and_province import city
 from App.infranstructure.repositories.city_repository import CityRepository
 from App.Service.base_service import BaseService
@@ -37,6 +37,6 @@ class CityService(BaseService):
         cities=self.city_repository.get_all_city(provincee_id=province_id)
         return cities
     
-    async def get_city_id(self,city_name:str):
-        city=self.city_repository.get_city_id_by_name(city_name)
-        return city_id(city_id=city.city_id)
+    async def get_city_id(self,city_id:UUID):
+        city=self.city_repository.get_city_name_by_id(city_id)
+        return city_info(city_name=city.city_name,province_name=city.province.province_name)

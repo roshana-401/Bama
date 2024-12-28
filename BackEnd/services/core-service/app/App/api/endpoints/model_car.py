@@ -3,6 +3,8 @@ from typing import Annotated,List
 from App.Service.auth_service.auth_service import getUser
 from App.Service.model_car_service import ModelCarService
 from uuid import UUID
+from App.Service.role_service import RoleService
+
 from App.domain.schemas.model_car_schema import (
     Add_model_car,
     massage_model_car,
@@ -10,8 +12,8 @@ from App.domain.schemas.model_car_schema import (
     update_model_car,
     model_car_list,
     get_car_compony_id,
-    model_car_id,
-    get_name
+    model_car_info,
+    get_model_car_id
 )
 
 router=APIRouter(
@@ -26,19 +28,22 @@ router=APIRouter(
 
 async def AddModelCar(model_car:Add_model_car,
                         modelCarService:Annotated[ModelCarService, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
     
-    if informationUser["role_id"]!=1:
+    if informationUser["role_id"]!=await role.get_role_admin():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
 
     return await modelCarService.Add_model_car(model_car)
+
 
 @router.delete("/delete",response_model=massage,status_code=status.HTTP_200_OK)
 
 async def DeleteModelCar(model_car_id:str,
                         modelCarService:Annotated[ModelCarService, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
-    if informationUser["role_id"]!=1:
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
+    if informationUser["role_id"]!=await role.get_role_admin():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
     try:
         model_car_id=UUID(model_car_id)
@@ -53,19 +58,20 @@ async def DeleteModelCar(model_car_id:str,
 
 async def UpdateModelCar(model_car:update_model_car,
                         modelCarService:Annotated[ModelCarService, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
-    if informationUser["role_id"]!=1:
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
+    if informationUser["role_id"]!=await role.get_role_admin():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
     
     
     return await modelCarService.update_model_car(model_car.model_id,model_car.model_car_name)
 
 
-@router.post("/getCarModelId",response_model=model_car_id,status_code=status.HTTP_200_OK)
+@router.post("/getCarModelId",response_model=model_car_info,status_code=status.HTTP_200_OK)
 
-async def getModelCarId(model_car:get_name,modelCarService:Annotated[ModelCarService, Depends()]):
+async def getModelCarId(model_car:get_model_car_id,modelCarService:Annotated[ModelCarService, Depends()]):
     
-    return await modelCarService.get_model_car_id(car_model_name=model_car.model_car_name)
+    return await modelCarService.get_model_car_id(model_car.model_id)
 
 
 

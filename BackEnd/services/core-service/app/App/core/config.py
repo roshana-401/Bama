@@ -8,7 +8,7 @@ class Setting(BaseSettings):
     database_password:str
     database_name:str
     database_username:str
-    
+    database_name_user:str
     class Config:
         env_file=".env"
 

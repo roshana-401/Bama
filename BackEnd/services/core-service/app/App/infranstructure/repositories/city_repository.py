@@ -47,10 +47,16 @@ class CityRepository:
         if city_name.first():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=" شهر با این نام موجود است")
         
-    def get_city_id_by_name(self,name):
-        city_name=self.db.query(city).filter(city.city_name==name)
+    def get_city_name_by_id(self,city_id:UUID):
+        city_name=self.db.query(city).filter(city.city_id==city_id)
         if not city_name.first():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=" شهر با این شناسه موجود نیست")
+        return city_name.first()
+    
+    def get_city_id_by_name(self,name:str):
+        city_name=self.db.query(city).filter(city.city_name==name)
+        if not city_name.first():
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=" شهر با این نام موجود نیست")
         return city_name.first()
         
     def get_all_city(self,provincee_id:UUID):

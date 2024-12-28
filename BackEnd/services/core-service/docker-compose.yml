@@ -45,6 +45,7 @@ services:
       - DATABASE_DIALECT=postgresql+psycopg2
       - DATABASE_HOSTNAME=postgres_container_new
       - DATABASE_NAME=CORE-DB
+      - DATABASE_NAME_USER=IAM-DB
       - DATABASE_PASSWORD=admin
       - DATABASE_PORT=5432
       - DATABASE_USERNAME=postgres

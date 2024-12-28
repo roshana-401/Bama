@@ -4,7 +4,7 @@ from App.domain.schemas.car_compony_schema import Add_car_compony
 from App.domain.models.model_and_car_compony import car_compony
 from App.infranstructure.repositories.car_compony_repository import CarComponyRepository
 from App.Service.base_service import BaseService
-from App.domain.schemas.car_compony_schema import (massage_car_compony,massage,get_car_compony_id)
+from App.domain.schemas.car_compony_schema import (massage_car_compony,massage,get_name)
 from uuid import UUID
 
 class CarComponyService(BaseService):
@@ -36,6 +36,6 @@ class CarComponyService(BaseService):
         cars=self.car_compony_repository.get_all_car_compony()
         return cars
     
-    async def get_car_compony_id(self,car_compony_name:str):
-        cars=self.car_compony_repository.get_car_compony_id_by_name(car_compony_name)
-        return get_car_compony_id(car_compony_id=cars.car_compony_id)
+    async def get_car_compony_id(self,car_compony_id:UUID):
+        cars=self.car_compony_repository.get_car_compony_name_by_id(car_compony_id)
+        return get_name(car_compony_name=cars.car_compony_name)
