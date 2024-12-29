@@ -31,7 +31,7 @@ async def AddProvince(province:Add_province,
                        role:Annotated[RoleService, Depends()]):
     
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
 
     return await provinceService.Add_province(province)
 
@@ -44,7 +44,7 @@ async def DeleteProvince(province_id:str,
                        informationUser: Annotated[dict, Depends(getUser)],
                        role:Annotated[RoleService, Depends()]):
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
     try:
         province_id=UUID(province_id)
     except:
@@ -62,7 +62,7 @@ async def UpdateProvice(province:update_province,
                        informationUser: Annotated[dict, Depends(getUser)],
                        role:Annotated[RoleService, Depends()]):
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
     
     
     return await provinceService.update_province(province_id=province.province_id,newDetail=province.province_name)

@@ -66,6 +66,12 @@ async def getFilterSellCar(sell_car_filter_data:filter_data_sell_car,
                         sellcarService:Annotated[SellCarService, Depends()],):
     
     return await sellcarService.get_sell_car_with_filter(sell_car_filter_data)
+
+@router.post("/getSellCarId",status_code=status.HTTP_200_OK)
+async def getSellCarId(sell_car_id:get_sell_car_id,
+                        sellcarService:Annotated[SellCarService, Depends()],):
+    
+    return await sellcarService.get_sell_car_id_for_check(sell_car_id=sell_car_id.sell_car_id)
     
 
 @router.post("/update",response_model=massage,status_code=status.HTTP_200_OK)

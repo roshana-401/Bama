@@ -32,7 +32,7 @@ async def AddCity(cityy:Add_city,
                        role:Annotated[RoleService, Depends()]):
     
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
 
     return await cityService.Add_city(cityy)
 
@@ -44,7 +44,7 @@ async def DeleteCity(city_id:str,
                        informationUser: Annotated[dict, Depends(getUser)],
                        role:Annotated[RoleService, Depends()]):
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
     try:
         city_id=UUID(city_id)
     except:
@@ -61,7 +61,7 @@ async def UpdateCity(cityy:update_city,
                        informationUser: Annotated[dict, Depends(getUser)],
                        role:Annotated[RoleService, Depends()]):
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
     
     
     return await cityService.update_city(city_id=cityy.city_id,newDetail=cityy.city_name)

@@ -31,7 +31,7 @@ async def AddCarCompony(car:Add_car_compony,
                         role:Annotated[RoleService, Depends()]):
     
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
 
     return await carComponyService.Add_car_compony(car)
 
@@ -44,7 +44,7 @@ async def DeleteCarCompony(car_compony_id:str,
                         role:Annotated[RoleService, Depends()]):
     
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
     try:
         car=UUID(car_compony_id)
     except:
@@ -60,7 +60,7 @@ async def UpdateCarCompony(car_compony:update_car_compony,
                        informationUser: Annotated[dict, Depends(getUser)],
                        role:Annotated[RoleService, Depends()]):
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
     
     
     return await carComponyService.update_car_compony(car_compony.car_compony_id,car_compony.car_compony_name)

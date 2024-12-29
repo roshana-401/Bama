@@ -21,13 +21,13 @@ class MediaRepositoryCar:
         mongo_id=save_file.inserted_id
         return mongo_id
     
-    async def get_all_car(self,car_sell_id:str,user_id:str,role_id:int):
+    async def get_all_car(self,car_sell_id:str,user_id:str,role_id:int,role_Admin:int):
         cars_cursor = self.collectionCar.find({"sell_car_id": car_sell_id}) 
         cars = await cars_cursor.to_list(None)
         if not cars:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="هیچ رسانه‌ای پیدا نشد.")
         all_media=[]
-        if role_id!=1:
+        if role_id!=role_Admin:
             for car in cars:
                 if car["user_id"]==user_id:
                     all_media.append({"media_id": str(car["_id"])})
@@ -49,11 +49,11 @@ class MediaRepositoryCar:
                 user_id=car["user_id"],
                 sell_car_id=car["sell_car_id"]
         )
-    async def delete_car(self,mongo_id:ObjectId,user_id:str,role_id:str):
+    async def delete_car(self,mongo_id:ObjectId,user_id:str,role_id:int,role_Admin:int):
         car =await self.collectionCar.find_one({"_id": mongo_id}) 
         if car is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="رسانه مورد نظر یافت نشد")
-        if role_id!=1 and car["user_id"]!=user_id:
+        if role_id!=role_Admin and car["user_id"]!=user_id:
             raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
                     detail="کاربر اجازه دسترسی به این رسانه را ندارد",
@@ -70,13 +70,13 @@ class MediaRepositorySpareParts:
         mongo_id=save_file.inserted_id
         return mongo_id
     
-    async def get_all_spareParts(self,sell_spareparts_id:str,user_id:str,role_id:int):
+    async def get_all_spareParts(self,sell_spareparts_id:str,user_id:str,role_id:int,role_Admin:int):
         spareParts_cursor = self.collectionSpareParts.find({"sell_spareparts_id": sell_spareparts_id}) 
         spareparts = await spareParts_cursor.to_list(None)
         if not spareparts:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="هیچ رسانه‌ای پیدا نشد.")
         all_media=[]
-        if role_id!=1:
+        if role_id!=role_Admin:
             for sparepart in spareparts:
                 if sparepart["user_id"]==user_id:
                     all_media.append({"media_id": str(sparepart["_id"])})
@@ -99,11 +99,11 @@ class MediaRepositorySpareParts:
             user_id=sparePart["user_id"],
             sell_spareparts_id=sparePart["sell_spareparts_id"]
         )
-    async def delete_sparePart(self,mongo_id:ObjectId,user_id:str,role_id:int):
+    async def delete_sparePart(self,mongo_id:ObjectId,user_id:str,role_id:int,role_Admin:int):
         sparePart =await self.collectionSpareParts.find_one({"_id": mongo_id}) 
         if sparePart is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="رسانه مورد نظر یافت نشد")
-        if  role_id!=1 and sparePart["user_id"]!=user_id:
+        if  role_id!=role_Admin and sparePart["user_id"]!=user_id:
             raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
                     detail="کاربر اجازه دسترسی به این رسانه را ندارد",

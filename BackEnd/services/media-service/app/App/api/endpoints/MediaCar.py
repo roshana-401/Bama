@@ -1,7 +1,7 @@
 from fastapi import status,Depends,APIRouter,UploadFile,HTTPException,File,Form,Query
 from typing import List,Annotated
 from uuid import UUID
-from App.Service.auth_service import getUser
+from App.Service.auth_service import (getUser,getinfoSellCar)
 from fastapi.responses import StreamingResponse
 from bson import ObjectId
 from App.domain.schemas.Media_schema import (
@@ -14,6 +14,7 @@ from App.domain.schemas.car_schema import (
     GetAllMedia
 )
 from App.Service.media_service import MediaServiceCar
+from App.Service.role_service import RoleService
 
 router=APIRouter(
     tags=["CarMedia"],
@@ -33,7 +34,17 @@ async def upload_media(
     car_sell_id:Annotated[UUID, Form()],
     media_service: Annotated[MediaServiceCar, Depends()],
     informationUser: Annotated[dict, Depends(getUser)],
-):
+    role:Annotated[RoleService, Depends()]):
+    
+    car_sell_info=await getinfoSellCar(car_sell_id)
+    role_Admin=await role.get_role_admin()
+
+    
+    if  int(informationUser["role_id"])!=role_Admin and car_sell_info["user_id"]!=informationUser["user_id"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="کاربر اجازه دسترسی ندارد"
+        )
     if file.content_type not in ALLOWED_IMAGE_MIME_TYPES:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -47,16 +58,18 @@ async def upload_media(
 
     return await media_service.create_media_car(file, informationUser["user_id"],car_sell_id=str(car_sell_id))
 
-    #request to cor to this user is owner this posts or not
     
         
 @router.post("/GetMediaCar",response_class=StreamingResponse,status_code=status.HTTP_200_OK)
 
 async def GetMedia(mongo_id:GetPictureCar,
                        media_service: Annotated[MediaServiceCar, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)],):
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
+    
+    role_Admin=await role.get_role_admin()
     media, file = await media_service.get_madia_car(
-        mongo_id=mongo_id.mongo_id, user_id=informationUser["user_id"],role_id=informationUser["role_id"]
+        mongo_id=mongo_id.mongo_id, user_id=informationUser["user_id"],role_id=informationUser["role_id"],role_Admin=role_Admin
     )
     return StreamingResponse(
         content=file(),
@@ -71,10 +84,12 @@ async def GetMedia(mongo_id:GetPictureCar,
 
 async def DeleteMedia(mongo_id:str,
                        media_service: Annotated[MediaServiceCar, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
+    role_Admin=await role.get_role_admin()
     if not ObjectId.is_valid(mongo_id):
             raise HTTPException(status_code=400, detail="فرمت اشتباه است")
-    massage=await media_service.delete_madia_car(mongo_id=ObjectId(mongo_id),user_id=informationUser["user_id"],role_id=informationUser["role_id"])
+    massage=await media_service.delete_madia_car(mongo_id=ObjectId(mongo_id),user_id=informationUser["user_id"],role_id=informationUser["role_id"],role_Admin=role_Admin)
     
     return massageCar(massage=massage["massage"])  
 
@@ -84,9 +99,19 @@ async def DeleteMedia(mongo_id:str,
 
 async def GetAllMediaId(car:GetAllMedia,
                        media_service: Annotated[MediaServiceCar, Depends()],
-                       informationUser: Annotated[dict, Depends(getUser)]):
+                       informationUser: Annotated[dict, Depends(getUser)],
+                       role:Annotated[RoleService, Depends()]):
+    
+    car_sell_info=await getinfoSellCar(car.sell_car_id)
+    role_Admin=await role.get_role_admin()
+    if  int(informationUser["role_id"])!=role_Admin and car_sell_info["user_id"]!=informationUser["user_id"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="کاربر اجازه دسترسی ندارد"
+        )
+    
     return await media_service.get_all_madia_car(
-        car_sell_id=str(car.sell_car_id),user_id=informationUser["user_id"],role_id=informationUser["role_id"]
+        car_sell_id=str(car.sell_car_id),user_id=informationUser["user_id"],role_id=informationUser["role_id"],role_Admin=role_Admin
     )
 
 

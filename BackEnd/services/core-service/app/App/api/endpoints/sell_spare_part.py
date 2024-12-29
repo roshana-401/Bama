@@ -63,7 +63,12 @@ async def getFilterSellSparePart(sell_spare_part_filter_data:filter_data_sell_sp
                         sellsparepartService:Annotated[SellSparePartService, Depends()],):
     
     return await sellsparepartService.get_sell_spare_part_with_filter(sell_spare_part_filter_data)
+
+@router.post("/getSellSparePartId",status_code=status.HTTP_200_OK)
+async def getSellCarId(sell_spare_part_id:get_sell_spare_part_id,
+                        sellsparepartService:Annotated[SellSparePartService, Depends()],):
     
+    return await sellsparepartService.get_sell_spare_part_id_for_check(sell_spare_part_id=sell_spare_part_id.sell_spare_part_id)
 
 @router.post("/update",response_model=massage,status_code=status.HTTP_200_OK)
 async def updateSellSparePart(sell_spare_part_update:updata_sell_spare_part,

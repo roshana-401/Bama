@@ -44,13 +44,13 @@ class MediaServiceCar:
             massage="رسانه با موفیت ذخیره شد"
         )
        
-    async def get_all_madia_car(self,car_sell_id:str,user_id:str,role_id:int):
-        return await self.media_response.get_all_car(car_sell_id,user_id,role_id)
+    async def get_all_madia_car(self,car_sell_id:str,user_id:str,role_id:int,role_Admin:int):
+        return await self.media_response.get_all_car(car_sell_id,user_id,role_id,role_Admin)
                 
-    async def media_car(self,mongo_id:ObjectId,user_id:str,role_id:int):
+    async def media_car(self,mongo_id:ObjectId,user_id:str,role_id:int,role_Admin:int):
         media=await self.media_response.get_car(mongo_id)
         
-        if role_id!=1 and media.user_id!=user_id:
+        if role_id!=role_Admin and media.user_id!=user_id:
                  raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
                     detail="کاربر اجازه دسترسی به این رسانه را ندارد",
@@ -58,8 +58,8 @@ class MediaServiceCar:
         file=await  self.storage.get_file(media.storage_id)
         return file ,media
        
-    async def get_madia_car(self,mongo_id:ObjectId,user_id:str,role_id:int):
-        file , media=await self.media_car(mongo_id,user_id,role_id)
+    async def get_madia_car(self,mongo_id:ObjectId,user_id:str,role_id:int,role_Admin:int):
+        file , media=await self.media_car(mongo_id,user_id,role_id,role_Admin)
         def file_stream():
             yield file
                 
@@ -74,9 +74,9 @@ class MediaServiceCar:
                     file_stream,
         ]      
         
-    async def delete_madia_car(self,mongo_id:ObjectId,user_id:str,role_id:int):
+    async def delete_madia_car(self,mongo_id:ObjectId,user_id:str,role_id:int,role_Admin:int):
         media=await self.media_response.get_car(mongo_id)
-        await self.media_response.delete_car(mongo_id,user_id,role_id)
+        await self.media_response.delete_car(mongo_id,user_id,role_id,role_Admin)
         return await self.storage.delete_file(media.storage_id)
         
                 
@@ -108,15 +108,15 @@ class MediaServiceSpareParts:
             massage="رسانه با موفیت ذخیره شد"
         )
         
-    async def delete_madia_sparePart(self,mongo_id:ObjectId,user_id:str,role_id:int):
+    async def delete_madia_sparePart(self,mongo_id:ObjectId,user_id:str,role_id:int,role_Admin:int):
         media=await self.media_response.get_sparePart(mongo_id)
-        await self.media_response.delete_sparePart(mongo_id,user_id,role_id)
+        await self.media_response.delete_sparePart(mongo_id,user_id,role_id,role_Admin)
         return await self.storage.delete_file(media.storage_id)
      
         
-    async def media_sparePart(self,mongo_id:ObjectId,user_id:str,role_id:int):
+    async def media_sparePart(self,mongo_id:ObjectId,user_id:str,role_id:int,role_Admin:int):
         media=await self.media_response.get_sparePart(mongo_id)
-        if role_id!=1 and media.user_id!=user_id:
+        if role_id!=role_Admin and media.user_id!=user_id:
                  raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="کاربر اجازه دسترسی به این رسانه را ندارد",
@@ -124,11 +124,11 @@ class MediaServiceSpareParts:
         
         file=await self.storage.get_file(media.storage_id)
         return file,media
-    async def get_all_madia_spareParts(self,sell_spareparts_id:str,user_id:str,role_id:int):
-        return await self.media_response.get_all_spareParts(sell_spareparts_id,user_id,role_id) 
+    async def get_all_madia_spareParts(self,sell_spareparts_id:str,user_id:str,role_id:int,role_Admin:int):
+        return await self.media_response.get_all_spareParts(sell_spareparts_id,user_id,role_id,role_Admin) 
       
-    async def get_madia_sparePart(self,mongo_id:ObjectId,user_id:str,role_id:int):
-            file,media=await self.media_sparePart(mongo_id,user_id,role_id)
+    async def get_madia_sparePart(self,mongo_id:ObjectId,user_id:str,role_id:int,role_Admin:int):
+            file,media=await self.media_sparePart(mongo_id,user_id,role_id,role_Admin)
             print(file)
             def file_stream():
                 yield file

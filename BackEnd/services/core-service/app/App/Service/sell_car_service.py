@@ -81,7 +81,7 @@ class SellCarService(BaseService):
     async def delete_sell_car_id(self,sell_car_id:UUID,user_id:UUID,role_id:int,role_Admin:int):
         sell_car=self.sell_car_repository.get_sell_car_id(sell_car_id)
         if role_id!=role_Admin and sell_car.user_id!=user_id:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
         
         self.sell_car_repository.delete_sell_car(sell_car=sell_car)
         carr=self.car_repository.get_car_id(sell_car.car_id)
@@ -92,7 +92,7 @@ class SellCarService(BaseService):
         sell_car=self.sell_car_repository.get_sell_car_id(sell_car_id)
         
         if role_id!=role_Admin and sell_car.user_id!=user_id:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
         
         if newDetail.model_id!=None:
             self.model_repository.get_model_car_id(newDetail.model_id)
@@ -124,4 +124,5 @@ class SellCarService(BaseService):
             car_compony_name=sell.car.model.car_compony.car_compony_name
         )for sell in sells_car]
         return sells
-   
+    async def get_sell_car_id_for_check(self,sell_car_id:UUID):
+       return self.sell_car_repository.get_sell_car_id_and_check(sell_car_id=sell_car_id)

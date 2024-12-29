@@ -75,7 +75,7 @@ class SellSparePartService(BaseService):
         sell_spare_part=self.sell_spare_part_repository.get_sell_spare_part_id(sell_spare_part_id=sell_spare_part_id)
         
         if role_id!=role_Admin and sell_spare_part.user_id!=user_id:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
         
         self.sell_spare_part_repository.delete_sell_spare_part(sell_spare_part=sell_spare_part)
         spare_part=self.spare_part_repository.get_spare_part_id(sell_spare_part.spare_parts_id)
@@ -86,7 +86,7 @@ class SellSparePartService(BaseService):
         sell_spare_part=self.sell_spare_part_repository.get_sell_spare_part_id(sell_spare_part_id)
         
         if role_id!=role_Admin and sell_spare_part.user_id!=user_id:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
         
         if newDetail.model_id!=None:
             self.model_repository.get_model_car_id(newDetail.model_id)
@@ -114,4 +114,7 @@ class SellSparePartService(BaseService):
             car_compony_name=sell.spare_parts.model.car_compony.car_compony_name
         )for sell in sells_spare]
         return sells
+    
+    async def get_sell_spare_part_id_for_check(self,sell_spare_part_id:UUID):
+       return self.sell_spare_part_repository.get_sell_spare_part_id_and_check(sell_spare_part_id=sell_spare_part_id)
    

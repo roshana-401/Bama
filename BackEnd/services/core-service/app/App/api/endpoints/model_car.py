@@ -32,7 +32,7 @@ async def AddModelCar(model_car:Add_model_car,
                        role:Annotated[RoleService, Depends()]):
     
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
 
     return await modelCarService.Add_model_car(model_car)
 
@@ -44,7 +44,7 @@ async def DeleteModelCar(model_car_id:str,
                        informationUser: Annotated[dict, Depends(getUser)],
                        role:Annotated[RoleService, Depends()]):
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
     try:
         model_car_id=UUID(model_car_id)
     except:
@@ -61,7 +61,7 @@ async def UpdateModelCar(model_car:update_model_car,
                        informationUser: Annotated[dict, Depends(getUser)],
                        role:Annotated[RoleService, Depends()]):
     if informationUser["role_id"]!=await role.get_role_admin():
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")
     
     
     return await modelCarService.update_model_car(model_car.model_id,model_car.model_car_name)

@@ -41,6 +41,6 @@ async def getSaveSellCarByID(user_id:get_user_id,
     role_Admin=await role.get_role_admin()
 
     if informationUser["role_id"]!=role_Admin and user_id.user_id!=UUID(informationUser["user_id"]):
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="کاربر اجازه دسترسی ندارد")        
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="کاربر اجازه دسترسی ندارد")        
     return await saveSellSparePartService.get_all_save_sell_spare_part(user_id=user_id)
 

@@ -18,6 +18,12 @@ services:
     environment:
       - DATABASE_URL=mongodb://mongo:27017
       - DATABASE_NAME=BamaMediaDB
+      - DATABASE_DIALECT=postgresql+psycopg2
+      - DATABASE_HOSTNAME=postgres_container_new
+      - DATABASE_NAME_USER=IAM-DB
+      - DATABASE_PASSWORD=admin
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PORT=5432
       # - FILE_STORAGE_PATH=app/media
       # - IAM_URL=http://iam
       # - GRPC_PORT=50051
