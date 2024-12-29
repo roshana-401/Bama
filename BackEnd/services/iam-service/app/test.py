@@ -192,7 +192,7 @@ async def test_Login():
         response = await client.post("http://iam_service:80/user/Sign/Register", json={"phone_number": phone, "password": "12345678"})
         assert response.status_code == status.HTTP_201_CREATED
         
-        response = await client.post("http://iam_service:80/user/Login", json={"phone_number": phone,"password":"12345678"})
+        response = await client.post("http://iam_service:80/user/Login", data={"username": phone,"password":"12345678"})
         assert response.status_code == status.HTTP_200_OK
     
     
@@ -200,7 +200,7 @@ async def test_Login():
 async def test_Login_with_wrong_phoneNumber():
     phone = await get_mock_phoneNumber()
     async with httpx.AsyncClient() as client:
-        response = await client.post("http://iam_service:80/user/Login", json={"phone_number": phone,"password":"12345678"})
+        response = await client.post("http://iam_service:80/user/Login", data={"username": phone,"password":"12345678"})
         assert response.status_code == status.HTTP_404_NOT_FOUND
         
     
@@ -219,7 +219,7 @@ async def test_Login_with_wrong_password():
         response = await client.post("http://iam_service:80/user/Sign/Register", json={"phone_number": phone, "password": "12345678"})
         assert response.status_code == status.HTTP_201_CREATED
         
-        response = await client.post("http://iam_service:80/user/Login", json={"phone_number": phone,"password":"12345670"})
+        response = await client.post("http://iam_service:80/user/Login", data={"username": phone,"password":"12345670"})
         assert response.status_code == status.HTTP_404_NOT_FOUND
     
 @pytest.mark.asyncio
@@ -239,7 +239,7 @@ async def test_token():
         response = await client.get("http://iam_service:80/TokenVerify",headers={"Authorization": f"Bearer {response.json().get('Token')}"})
         assert response.status_code == status.HTTP_200_OK
         
-        response = await client.post("http://iam_service:80/user/Login", json={"phone_number": phone,"password":"12345678"})
+        response = await client.post("http://iam_service:80/user/Login", data={"username": phone,"password":"12345678"})
         assert response.status_code == status.HTTP_200_OK
         
         response = await client.get("http://iam_service:80/TokenVerify",headers={"Authorization": f"Bearer {response.json().get('Token')}"})
