@@ -10,16 +10,14 @@ from App.domain.models.sell_spare_part import (SellSpareParts,spareParts)
 from App.domain.models.model_and_car_compony import (car_compony,model)
 from sqlalchemy.dialects.postgresql import UUID
 from App.domain.models.city_and_province import (city)
-from App.infranstructure.repositories.user_repository import UserRepository
 from App.infranstructure.repositories.spare_part_repository import SparePartRepository
 from datetime import datetime
 from sqlalchemy.orm import joinedload
 
 class SellSparePartRepository:
-    def __init__(self,db:Annotated[Session,Depends(get_db)],user_repository:Annotated[UserRepository,Depends()],
+    def __init__(self,db:Annotated[Session,Depends(get_db)],
                  spare_part_repository:Annotated[SparePartRepository,Depends()]):
         self.db=db
-        self.user_repository=user_repository
         self.spare_part_repository=spare_part_repository
 
     def create_sell_spare_part(self,sell_spare_part:SellSpareParts):
@@ -63,13 +61,6 @@ class SellSparePartRepository:
             self.db.commit()
         
         return updated_sell_spare_part
-    
-    def update_sell_spare_part_phone_number(self,user_id:UUID,NewDetail:update_phone_number):
-        
-        self.user_repository.get_user_by_id(user_id=user_id)
-        self.db.query(SellSpareParts).filter(SellSpareParts.user_id==user_id).update({"phone_number":NewDetail.phone_number},synchronize_session=False)
-        
-        self.db.commit()
 
 
     def get_sell_spare_part_id(self, sell_spare_part_id: UUID):

@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from App.api.endpoints import register
 from App.api.endpoints import login
 from App.api.endpoints import token
+from App.api.endpoints import user
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app=FastAPI()
@@ -19,6 +21,7 @@ app.add_middleware(
 app.include_router(register.router)
 app.include_router(login.router)
 app.include_router(token.router)
+app.include_router(user.router)
 
 
 @app.get("/")

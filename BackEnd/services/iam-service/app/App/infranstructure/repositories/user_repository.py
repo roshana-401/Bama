@@ -6,8 +6,9 @@ from fastapi import Depends,HTTPException,status
 from App.domain.models.user import users
 from App.domain.schemas.user_schema import (
     GetPhoneNumber,
-    UpdatePasswordUser,
+    GetPassword,
     UpdateUser,
+    user_list
 )
 from App.domain.models.user_status import UserStatus
 from sqlalchemy.dialects.postgresql import UUID
@@ -22,8 +23,20 @@ class UserRepository:
         self.db.refresh(user)
         return user
     
+    def get_user_by_id(self,user_id:UUID):
+        user=self.db.query(users).filter(users.user_id==user_id)
+        if not user.first():
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="  چنین کاربری وجود ندارد")
+        return user.first()
     
-    def delete_user(self,user:users):
+    def get_all_users(self):
+        userss=self.db.query(users).all()
+        return [user_list(date_register=str(user.date_register),date_update_Profile=str(user.date_update_Profile),status=str(user.status)
+                          ,role='Admin' if user.role_id == 1 else 'User',phone_number=user.phone_number,user_id=user.user_id) for user in userss]
+        
+    
+    def delete_user(self,user_id:UUID):
+        user=self.db.query(users).filter(users.user_id==user_id)
         user.delete(synchronize_session=False)
         self.db.commit()
     
@@ -46,12 +59,12 @@ class UserRepository:
         
         return updated_user.first()
     
-    def update_Password_user(self,user_id:UUID,NewDetail:UpdatePasswordUser):
+    def update_Password_user(self,user_id:UUID,NewDetail:str):
         updated_user=self.db.query(users).filter(users.user_id==user_id)
         if not updated_user.first():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"کاربری با این شماره تلفن موجود نیست")
         
-        updated_user.update({"password":NewDetail.password},synchronize_session=False)
+        updated_user.update({"password":NewDetail},synchronize_session=False)
         self.db.commit()
         
         return updated_user.first()

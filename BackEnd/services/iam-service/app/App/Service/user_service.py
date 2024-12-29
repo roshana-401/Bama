@@ -9,7 +9,8 @@ from ..domain.schemas.user_schema import (
     UpdateUser ,
     CreateUser,
     GetPhoneNumber,
-    CreateUserStepThree
+    CreateUserStepThree,
+    massage
 
 )
     
@@ -55,13 +56,19 @@ class UserService(BaseService):
         )
         return self.user_repository.update_user_StepThree(user_id=user_id,user=user)
     
+    async def get_all_user(self):
+        return self.user_repository.get_all_users()        
+
+
+    async def delete_user(self,user_id:UUID):
+        self.user_repository.get_user_by_id(user_id)
+        self.user_repository.delete_user(user_id=user_id)
+        return massage(massage="کاربر مورد نظر با موفقیت حذف شد")
+    
+    
     async def update_State_user(self, user_id: UUID):
 
         return self.user_repository.update_State_user(user_id)
-
-    async def delete_user(self, user: users) -> None:
-        
-        return self.user_repository.delete_user(user)
 
     async def get_user(self, user_id: UUID):
         return self.user_repository.get_user(user_id)

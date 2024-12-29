@@ -73,13 +73,7 @@ class SellCarRepository:
             self.db.commit()
         
         return updated_sell_car
-    
-    def update_sell_car_phone_number(self,user_id:UUID,NewDetail:update_phone_number):
-        
-        self.user_repository.get_user_by_id(user_id=user_id)
-        self.db.query(SellCar).filter(SellCar.user_id==user_id).update({"phone_number":NewDetail.phone_number},synchronize_session=False)
-        
-        self.db.commit()
+
 
     def get_sell_car_id_and_check(self,sell_car_id: UUID):
         sell_car=self.db.query(SellCar).filter(SellCar.sell_car_id==sell_car_id)
