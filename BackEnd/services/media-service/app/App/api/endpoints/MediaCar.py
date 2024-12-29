@@ -42,7 +42,7 @@ async def upload_media(
     
     if  int(informationUser["role_id"])!=role_Admin and car_sell_info["user_id"]!=informationUser["user_id"]:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="کاربر اجازه دسترسی ندارد"
         )
     if file.content_type not in ALLOWED_IMAGE_MIME_TYPES:
@@ -106,7 +106,7 @@ async def GetAllMediaId(car:GetAllMedia,
     role_Admin=await role.get_role_admin()
     if  int(informationUser["role_id"])!=role_Admin and car_sell_info["user_id"]!=informationUser["user_id"]:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="کاربر اجازه دسترسی ندارد"
         )
     
