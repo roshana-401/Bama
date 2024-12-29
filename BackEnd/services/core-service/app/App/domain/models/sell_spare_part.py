@@ -4,6 +4,8 @@ from sqlalchemy.sql import func, text
 from .operation_status import OperationStatus
 from ...core.db.database import get_Base_Class
 from App.domain.models.city_and_province import city
+from App.domain.models.user import users
+
 from sqlalchemy.orm import relationship
 Base=get_Base_Class()
 
@@ -21,7 +23,7 @@ class SellSpareParts(Base):
 
     sell_spare_parts_id=Column(UUID(as_uuid=True),primary_key=True,nullable=False,server_default=text("gen_random_uuid()"))
     phone_number = Column(String, nullable=False)
-    user_id = Column(UUID(as_uuid=True), nullable=False)
+    user_id = Column(UUID(as_uuid=True),ForeignKey(users.user_id,ondelete="CASCADE"), nullable=False)
     spare_parts_id = Column(UUID(as_uuid=True), ForeignKey("spare_parts.spare_parts_id",ondelete="CASCADE"), nullable=False)
     date_create = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
     description=Column(String, nullable=True)

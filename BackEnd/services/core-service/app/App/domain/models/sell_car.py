@@ -7,6 +7,7 @@ from sqlalchemy.orm import relationship
 from .gearboxStatus import gearboxStatus
 from App.domain.models.city_and_province import city
 from App.domain.models.model_and_car_compony import model
+from App.domain.models.user import users
 
 Base=get_Base_Class()
 
@@ -30,7 +31,7 @@ class SellCar(Base):
 
     sell_car_id=Column(UUID(as_uuid=True),primary_key=True,nullable=False,server_default=text("gen_random_uuid()"))
     phone_number = Column(String, nullable=False)
-    user_id = Column(UUID(as_uuid=True), nullable=False)
+    user_id = Column(UUID(as_uuid=True),ForeignKey(users.user_id,ondelete="CASCADE"), nullable=False)
     car_id = Column(UUID(as_uuid=True), ForeignKey("car.car_id",ondelete="CASCADE"), nullable=False)
     date_create = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
     description=Column(String, nullable=True)
