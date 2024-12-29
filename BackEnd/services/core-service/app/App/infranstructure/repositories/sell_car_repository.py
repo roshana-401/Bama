@@ -19,12 +19,9 @@ from sqlalchemy.orm import joinedload
 
 class SellCarRepository:
     def __init__(self,db:Annotated[Session,Depends(get_db)],user_repository:Annotated[UserRepository,Depends()],
-                 model_repository:Annotated[ModelCarRepository,Depends()],city_repository:Annotated[CityRepository,Depends()],
                  car_repository:Annotated[CarRepository,Depends()]):
         self.db=db
         self.user_repository=user_repository
-        self.model_repository=model_repository
-        self.city_repository=city_repository
         self.car_repository=car_repository
 
     def create_sell_car(self,sell_car:SellCar):

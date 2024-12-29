@@ -19,3 +19,4 @@ class city(Base):
     province=relationship("province")
     
     sell_cars = relationship("SellCar", back_populates="city")
+    sell_spare_parts = relationship("SellSpareParts", back_populates="city")

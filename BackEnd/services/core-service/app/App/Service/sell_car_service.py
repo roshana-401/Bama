@@ -102,7 +102,7 @@ class SellCarService(BaseService):
         
         self.sell_car_repository.update_sell_car(updated_sell_car=sell_car,NewDetail=newDetail)
 
-        return massage(massage="آگهی مورد نظر با موفقیت حذف شد")
+        return massage(massage="آگهی مورد نظر با موفقیت بروزرسانی شد")
     
     async def get_sell_car_with_filter(self,filter_data:filter_data_sell_car):
         sells_car=self.sell_car_repository.get_all_sell_car(filter_data=filter_data)

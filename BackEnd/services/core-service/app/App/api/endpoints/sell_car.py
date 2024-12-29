@@ -62,14 +62,14 @@ async def deleteSellCar(sell_car_id:str,
     return await sellcarService.delete_sell_car_id(sell_car_id=sell_car_id,role_id=informationUser["role_id"],user_id=user_id,role_Admin=role_Admin)
 
 @router.post("/getByFilter",response_model=List[sell_car_form],status_code=status.HTTP_200_OK)
-async def deleteSellCar(sell_car_filter_data:filter_data_sell_car,
+async def getFilterSellCar(sell_car_filter_data:filter_data_sell_car,
                         sellcarService:Annotated[SellCarService, Depends()],):
     
     return await sellcarService.get_sell_car_with_filter(sell_car_filter_data)
     
 
 @router.post("/update",response_model=massage,status_code=status.HTTP_200_OK)
-async def deleteSellCar(sell_car_update:updata_sell_car,
+async def updateSellCar(sell_car_update:updata_sell_car,
                         sellcarService:Annotated[SellCarService, Depends()],
                         informationUser: Annotated[dict, Depends(getUser)],
                         role:Annotated[RoleService, Depends()]):

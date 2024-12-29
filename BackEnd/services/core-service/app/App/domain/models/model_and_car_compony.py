@@ -16,6 +16,7 @@ class model(Base):
     car_compony=relationship("car_compony")
 
     cars = relationship("car", back_populates="model")
+    spareparts = relationship("spareParts", back_populates="model")
 class car_compony(Base):
     __tablename__="car_compony"
     car_compony_id = Column(UUID(as_uuid=True),primary_key=True,nullable=False,server_default=text("gen_random_uuid()"))

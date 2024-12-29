@@ -4,6 +4,7 @@ from App.api.endpoints import model_car
 from App.api.endpoints import province
 from App.api.endpoints import city
 from App.api.endpoints import sell_car
+from App.api.endpoints import sell_spare_part
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -23,6 +24,7 @@ app.include_router(car_compony.router)
 app.include_router(model_car.router)
 app.include_router(province.router)
 app.include_router(city.router)
+app.include_router(sell_spare_part.router)
 app.include_router(sell_car.router)
 
 
