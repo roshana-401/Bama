@@ -2,7 +2,7 @@ from pydantic import BaseModel,EmailStr,conint,Field
 from uuid import UUID
 
 class get_name(BaseModel):
-    model_car_name:str= Field(..., max_length=20,min_length=4)
+    model_car_name:str= Field(..., max_length=20,min_length=4,pattern=r'^[\w\s\-\u0600-\u06FF]+$')
 
 class get_car_compony_id(BaseModel):
     car_compony_id:UUID

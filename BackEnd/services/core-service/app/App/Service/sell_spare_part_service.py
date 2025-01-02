@@ -68,7 +68,8 @@ class SellSparePartService(BaseService):
             price=sell_spare_part.spare_parts.price,
             Operation=sell_spare_part.spare_parts.Operation,
             model_name=sell_spare_part.spare_parts.model.model_name,
-            car_compony_name=sell_spare_part.spare_parts.model.car_compony.car_compony_name
+            car_compony_name=sell_spare_part.spare_parts.model.car_compony.car_compony_name,
+            sell_spare_part_id=str(sell_spare_part.sell_spare_parts_id)
         )
         
     async def delete_sell_spare_part_id(self,sell_spare_part_id:UUID,user_id:UUID,role_id:int,role_Admin:int):
@@ -111,7 +112,8 @@ class SellSparePartService(BaseService):
             price=sell.spare_parts.price,
             Operation=sell.spare_parts.Operation,
             model_name=sell.spare_parts.model.model_name,
-            car_compony_name=sell.spare_parts.model.car_compony.car_compony_name
+            car_compony_name=sell.spare_parts.model.car_compony.car_compony_name,
+            sell_spare_part_id=str(sell.sell_spare_parts_id)
         )for sell in sells_spare]
         return sells
     

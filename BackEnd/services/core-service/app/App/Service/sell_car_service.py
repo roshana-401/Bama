@@ -77,6 +77,7 @@ class SellCarService(BaseService):
             Operation=sell_car.car.Operation,
             model_name=sell_car.car.model.model_name,
             car_compony_name=sell_car.car.model.car_compony.car_compony_name
+            ,sell_car_id=str(sell_car.sell_car_id)
         )
     async def delete_sell_car_id(self,sell_car_id:UUID,user_id:UUID,role_id:int,role_Admin:int):
         sell_car=self.sell_car_repository.get_sell_car_id(sell_car_id)
@@ -121,7 +122,8 @@ class SellCarService(BaseService):
             gearbox=sell.car.gearbox,
             Operation=sell.car.Operation,
             model_name=sell.car.model.model_name,
-            car_compony_name=sell.car.model.car_compony.car_compony_name
+            car_compony_name=sell.car.model.car_compony.car_compony_name,
+            sell_car_id=str(sell.sell_car_id)
         )for sell in sells_car]
         return sells
     async def get_sell_car_id_for_check(self,sell_car_id:UUID):
