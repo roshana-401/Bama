@@ -13,7 +13,8 @@ from App.domain.schemas.sell_spare_part import (
     get_sell_spare_part_id,
     sell_spare_part_form,
     filter_data_sell_spare_part,
-    updata_sell_spare_part
+    updata_sell_spare_part,
+    get_user_id
 )
 
 router=APIRouter(
@@ -79,4 +80,17 @@ async def updateSellSparePart(sell_spare_part_update:updata_sell_spare_part,
     role_Admin=await role.get_role_admin()
     user_id=UUID(informationUser["user_id"])
     return await sellsparepartService.update_sell_spare_part_id(newDetail=sell_spare_part_update,sell_spare_part_id=sell_spare_part_update.sell_spare_part_id,role_id=informationUser["role_id"],user_id=user_id,role_Admin=role_Admin)
+
+@router.post("/getAllSellSparePartForUser",response_model=List[sell_spare_part_form],status_code=status.HTTP_200_OK)
+async def getAllSellSparePartForUSer(userr:get_user_id,
+                        sellsparepartService:Annotated[SellSparePartService, Depends()],
+                        informationUser: Annotated[dict, Depends(getUser)],
+                        role:Annotated[RoleService, Depends()]):
+    
+    role_Admin=await role.get_role_admin()
+    if userr.user_id!=None and int(informationUser["role_id"])==int(role_Admin):
+        return await sellsparepartService.get_sell_spare_part_with_user_id(userr.user_id)
+    
+    else:
+        return await sellsparepartService.get_sell_spare_part_with_user_id(user_id=informationUser["user_id"])
 

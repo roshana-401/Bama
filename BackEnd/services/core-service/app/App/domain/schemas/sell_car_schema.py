@@ -9,6 +9,9 @@ current_year = jdatetime.datetime.now().year
 
 class get_sell_car_id(BaseModel):
     sell_car_id:UUID
+
+class get_user_id(BaseModel):
+    user_id:Optional[UUID]=None
     
 class get_phone_number(BaseModel):
     phone_number:str

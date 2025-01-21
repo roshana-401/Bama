@@ -86,6 +86,11 @@ class SellCarRepository:
         if not sell_car.first():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=" آگهی ماشین با این شناسه موجود نیست")
         return sell_car.first()
+    
+    def get_sell_car_by_user_id(self, user_id: UUID):
+        sell_car = self.db.query(SellCar).options(joinedload(SellCar.car).joinedload(car.model).joinedload(model.car_compony) ).options(joinedload(SellCar.city).joinedload(city.province)).filter(SellCar.user_id == user_id)
+        
+        return sell_car.all()
         
     def get_all_sell_car(self,filter_data:filter_data_sell_car):
         sells_car = self.db.query(SellCar).options(joinedload(SellCar.car).joinedload(car.model).joinedload(model.car_compony) ).options(joinedload(SellCar.city).joinedload(city.province)).filter(

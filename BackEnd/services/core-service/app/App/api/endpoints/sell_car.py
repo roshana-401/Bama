@@ -13,7 +13,8 @@ from App.domain.schemas.sell_car_schema import (
     get_sell_car_id,
     sell_car_form,
     filter_data_sell_car,
-    updata_sell_car
+    updata_sell_car,
+    get_user_id
 )
 
 router=APIRouter(
@@ -84,3 +85,14 @@ async def updateSellCar(sell_car_update:updata_sell_car,
     user_id=UUID(informationUser["user_id"])
     return await sellcarService.update_sell_car_id(newDetail=sell_car_update,sell_car_id=sell_car_update.sell_car_id,role_id=informationUser["role_id"],user_id=user_id,role_Admin=role_Admin)
 
+@router.post("/getAllSellCarForUser",response_model=List[sell_car_form],status_code=status.HTTP_200_OK)
+async def getAllSellCarForUSer(userr:get_user_id,
+                        sellcarService:Annotated[SellCarService, Depends()],
+                        informationUser: Annotated[dict, Depends(getUser)],
+                        role:Annotated[RoleService, Depends()]):
+    role_Admin=await role.get_role_admin()
+    if userr.user_id!=None and int(informationUser["role_id"])==int(role_Admin):
+        return await sellcarService.get_sell_car_with_user_id(user_id=userr.user_id)
+    
+    else:
+        return await sellcarService.get_sell_car_with_user_id(user_id=informationUser["user_id"])

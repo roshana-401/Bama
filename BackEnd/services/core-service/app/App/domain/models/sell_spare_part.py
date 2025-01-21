@@ -32,3 +32,4 @@ class SellSpareParts(Base):
 
     spare_parts=relationship("spareParts",back_populates="sell_spare_parts")
     city = relationship("city", back_populates="sell_spare_parts")
+    save_sparePart = relationship("saveSellSparePart", back_populates="sellSparePart")

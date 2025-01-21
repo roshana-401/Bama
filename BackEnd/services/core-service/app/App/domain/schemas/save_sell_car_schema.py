@@ -9,6 +9,9 @@ class get_sell_car_id(BaseModel):
 class get_user_id(BaseModel):
     user_id:UUID
 
+class get_user_id_For_save(BaseModel):
+    user_id:Optional[UUID]=None
+
 class all_save_sell_car(get_sell_car_id):
     pass
 class save_sell_car(get_sell_car_id):

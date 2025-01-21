@@ -68,6 +68,10 @@ class SellSparePartRepository:
         if not sell_spare_part.first():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=" آگهی لوازم یدکی با این شناسه موجود نیست")
         return sell_spare_part.first()
+
+    def get_sell_spare_part_by_user_id(self, user_id: UUID):
+        sell_spare_part = self.db.query(SellSpareParts).options(joinedload(SellSpareParts.spare_parts).joinedload(spareParts.model).joinedload(model.car_compony) ).options(joinedload(SellSpareParts.city).joinedload(city.province)).filter(SellSpareParts.user_id == user_id)
+        return sell_spare_part.all()
         
         
     def get_sell_spare_part_id_and_check(self,sell_spare_part_id: UUID):

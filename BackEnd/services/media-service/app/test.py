@@ -58,7 +58,7 @@ async def test_get_Wrong_user_media_car():
     async with httpx.AsyncClient() as client:
         response =await client.post(
             "http://media_service:80/Media/Car/GetMediaCar",
-            json={"mongo_id":"6771a0f40d9f476a81addc9b"},  
+            json={"mongo_id":"67875b03477b9b430410eaa7"},  
             headers={
                 "Authorization": f"Bearer {token}"
             }
@@ -71,7 +71,7 @@ async def test_get_Wrong_user_media_spare():
     async with httpx.AsyncClient() as client:
         response =await client.post(
             "http://media_service:80/Media/SpareParts/GetMediaSparePart",
-            json={"mongo_id":"6771a1120d9f476a81addc9e"},  
+            json={"mongo_id":"67875af0477b9b430410eaa2"},  
             headers={
                 "Authorization": f"Bearer {token}"
             }
@@ -84,7 +84,7 @@ async def test_get_media_spare_and_car():
     async with httpx.AsyncClient() as client:
         response =await client.post(
             "http://media_service:80/Media/SpareParts/GetMediaSparePart",
-            json={"mongo_id":"6771a302469881cf5b99105d"},  
+            json={"mongo_id":"67875d8942b1c754de55e727"},  
             headers={
                 "Authorization": f"Bearer {token}"
             }
@@ -92,7 +92,7 @@ async def test_get_media_spare_and_car():
         assert response.status_code == status.HTTP_200_OK
         response =await client.post(
             "http://media_service:80/Media/Car/GetMediaCar",
-            json={"mongo_id":"6771a2d7469881cf5b99105a"},  
+            json={"mongo_id":"67875c98ecb55c6f5c8f20d3"},  
             headers={
                 "Authorization": f"Bearer {token}"
             }
@@ -105,7 +105,7 @@ async def test_get_media_spare_and_car_admin():
     async with httpx.AsyncClient() as client:
         response =await client.post(
             "http://media_service:80/Media/SpareParts/GetMediaSparePart",
-            json={"mongo_id":"6771a302469881cf5b99105d"},  
+            json={"mongo_id":"67875d8942b1c754de55e727"},  
             headers={
                 "Authorization": f"Bearer {token}"
             }
@@ -113,7 +113,7 @@ async def test_get_media_spare_and_car_admin():
         assert response.status_code == status.HTTP_200_OK
         response =await client.post(
             "http://media_service:80/Media/Car/GetMediaCar",
-            json={"mongo_id":"6771a2d7469881cf5b99105a"},  
+            json={"mongo_id":"67875c98ecb55c6f5c8f20d3"},  
             headers={
                 "Authorization": f"Bearer {token}"
             }
@@ -422,7 +422,7 @@ async def test_get_all_media_car_spare_part():
     async with httpx.AsyncClient() as client:
         response =await client.post(
             "http://media_service:80/Media/Car/GetAllMediaIdCar",
-            json={"sell_car_id":"f64ad4bd-2d73-4908-a148-1d3bcbae0f1a"},  
+            json={"sell_car_id":"b515da31-6581-4752-baa1-c51c2f8b4f60"},  
             headers={
                 "Authorization": f"Bearer {token}"
             }
@@ -431,7 +431,7 @@ async def test_get_all_media_car_spare_part():
 
         response =await client.post(
             "http://media_service:80/Media/SpareParts/GetAllMediaIdSpareParts",
-            json={"sell_spareparts_id":"992e3542-9437-4056-aac8-a1a55c803d0f"},  
+            json={"sell_spareparts_id":"2b5b062f-75fd-474f-972e-943d0ad7f2df"},  
             headers={
                 "Authorization": f"Bearer {token}"
             }
@@ -444,7 +444,7 @@ async def test_get_all_media_car_spare_part_admin():
     async with httpx.AsyncClient() as client:
         response =await client.post(
             "http://media_service:80/Media/Car/GetAllMediaIdCar",
-            json={"sell_car_id":"f64ad4bd-2d73-4908-a148-1d3bcbae0f1a"},  
+            json={"sell_car_id":"459590ad-086d-4659-830b-426ec3e410f6"},  
             headers={
                 "Authorization": f"Bearer {token}"
             }
@@ -453,7 +453,7 @@ async def test_get_all_media_car_spare_part_admin():
 
         response =await client.post(
             "http://media_service:80/Media/SpareParts/GetAllMediaIdSpareParts",
-            json={"sell_spareparts_id":"992e3542-9437-4056-aac8-a1a55c803d0f"},  
+            json={"sell_spareparts_id":"c9979ad7-212c-4fbe-b2ce-c29dffa3dba4"},  
             headers={
                 "Authorization": f"Bearer {token}"
             }

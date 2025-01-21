@@ -22,14 +22,14 @@ async def test_Add_dublicate_carCompony():
     async with httpx.AsyncClient() as client:
         response = await client.post(
             "http://core_service:80/admin/carCompony/Add",
-            json={"car_compony_name": "ppprrpp"},
+            json={"car_compony_name": "ppprrppppp"},
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == status.HTTP_201_CREATED
         
         response = await client.post(
             "http://core_service:80/admin/carCompony/Add",
-            json={"car_compony_name": "ppprrpp"},
+            json={"car_compony_name": "ppprrppppp"},
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -48,14 +48,14 @@ async def test_Add_dublicate_model():
     async with httpx.AsyncClient() as client:
         response = await client.post(
             "http://core_service:80/admin/modelCar/Add",
-            json={"car_compony_id": "f75fc0bd-a289-4893-908f-ff4d715d52e8","model_car_name":"qqqqqq"},
+            json={"car_compony_id": "d0622ba2-521f-4558-a630-6f4735690d98","model_car_name":"qqqqqq"},
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == status.HTTP_201_CREATED
         
         response = await client.post(
             "http://core_service:80/admin/modelCar/Add",
-            json={"car_compony_id": "f75fc0bd-a289-4893-908f-ff4d715d52e8","model_car_name":"qqqqqq"},
+            json={"car_compony_id": "d0622ba2-521f-4558-a630-6f4735690d98","model_car_name":"qqqqqq"},
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -73,14 +73,14 @@ async def test_Add_dublicate_province():
     async with httpx.AsyncClient() as client:
         response = await client.post(
             "http://core_service:80/admin/province/Add",
-            json={"province_name": "qqqqqqqqq"},
+            json={"province_name": "qqqqqqqiiiiqq"},
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == status.HTTP_201_CREATED
         
         response = await client.post(
             "http://core_service:80/admin/province/Add",
-            json={"province_name": "qqqqqqqqq"},
+            json={"province_name": "qqqqqqqiiiiqq"},
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -98,14 +98,14 @@ async def test_Add_dublicate_city():
     async with httpx.AsyncClient() as client:
         response = await client.post(
             "http://core_service:80/admin/city/Add",
-            json={"city_name": "qqqqwqwqq","province_id":"a17510f7-2d8f-41e8-80e9-1e14435ccfc9"},
+            json={"city_name": "qqqqwqdsjjdsjndsjwqq","province_id":"a17510f7-2d8f-41e8-80e9-1e14435ccfc9"},
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == status.HTTP_201_CREATED
         
         response = await client.post(
             "http://core_service:80/admin/city/Add",
-            json={"city_name": "qqqwqwqqqq","province_id":"a17510f7-2d8f-41e8-80e9-1e14435ccfc9"},
+            json={"city_name": "qqqqwqdsjjdsjndsjwqq","province_id":"a17510f7-2d8f-41e8-80e9-1e14435ccfc9"},
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == status.HTTP_400_BAD_REQUEST

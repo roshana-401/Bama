@@ -126,5 +126,28 @@ class SellCarService(BaseService):
             sell_car_id=str(sell.sell_car_id)
         )for sell in sells_car]
         return sells
+    
+    async def get_sell_car_with_user_id(self,user_id:UUID):
+        self.user_repository.get_user_by_id(user_id)
+        sells_car=self.sell_car_repository.get_sell_car_by_user_id(user_id)
+        sells=[sell_car_form(
+            phone_number=sell.phone_number,
+            description=sell.description,
+            dateUpdate=str(sell.date_update),
+            dateCreate=str(sell.date_create),
+            city_name=sell.city.city_name,
+            province_name=sell.city.province.province_name,
+            car_name=sell.car.car_name,
+            color=sell.car.color,
+            KM=sell.car.KM,
+            year=sell.car.year,
+            price=sell.car.price,
+            gearbox=sell.car.gearbox,
+            Operation=sell.car.Operation,
+            model_name=sell.car.model.model_name,
+            car_compony_name=sell.car.model.car_compony.car_compony_name,
+            sell_car_id=str(sell.sell_car_id)
+        )for sell in sells_car]
+        return sells
     async def get_sell_car_id_for_check(self,sell_car_id:UUID):
        return self.sell_car_repository.get_sell_car_id_and_check(sell_car_id=sell_car_id)

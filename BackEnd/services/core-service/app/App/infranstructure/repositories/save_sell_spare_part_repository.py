@@ -6,6 +6,10 @@ from fastapi import Depends,HTTPException,status
 from sqlalchemy.dialects.postgresql import UUID
 from App.domain.models.save_sell_spare_part import (saveSellSparePart)
 from sqlalchemy.dialects.postgresql import UUID
+from App.domain.models.sell_spare_part import (SellSpareParts,spareParts)
+from App.domain.models.model_and_car_compony import (car_compony,model)
+from App.domain.models.city_and_province import (city)
+from sqlalchemy.orm import joinedload
 
 class SaveSellSparePartRepository:
     def __init__(self,db:Annotated[Session,Depends(get_db)]):
@@ -36,9 +40,9 @@ class SaveSellSparePartRepository:
         return boolForExist.first()
         
     def get_all_save_sell_spare_part_by_ID(self,user_id:UUID):
-        all_save_spare_part = self.db.query(saveSellSparePart).filter(saveSellSparePart.user_id==user_id)
+        sell_spare_part = self.db.query(saveSellSparePart).options(joinedload(saveSellSparePart.sellSparePart).joinedload(SellSpareParts.spare_parts).joinedload(spareParts.model).joinedload(model.car_compony), joinedload(saveSellSparePart.sellSparePart).joinedload(SellSpareParts.city).joinedload(city.province)).filter(saveSellSparePart.user_id == user_id)
 
                                                                                                                     
-        return all_save_spare_part.all()
+        return sell_spare_part.all()
     
     

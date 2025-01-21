@@ -40,3 +40,4 @@ class SellCar(Base):
     
     car = relationship("car", back_populates="sell_cars")
     city = relationship("city", back_populates="sell_cars")
+    save_cars = relationship("saveSellCar", back_populates="sellCar")

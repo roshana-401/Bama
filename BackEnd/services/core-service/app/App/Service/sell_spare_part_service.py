@@ -116,6 +116,25 @@ class SellSparePartService(BaseService):
             sell_spare_part_id=str(sell.sell_spare_parts_id)
         )for sell in sells_spare]
         return sells
+
+    async def get_sell_spare_part_with_user_id(self,user_id:UUID):
+        self.user_repository.get_user_by_id(user_id)
+        sells_spare=self.sell_spare_part_repository.get_sell_spare_part_by_user_id(user_id)
+        sells=[sell_spare_part_form(
+            phone_number=sell.phone_number,
+            description=sell.description,
+            dateUpdate=str(sell.date_update),
+            dateCreate=str(sell.date_create),
+            city_name=sell.city.city_name,
+            province_name=sell.city.province.province_name,
+            spare_part_name=sell.spare_parts.spare_parts_name,
+            price=sell.spare_parts.price,
+            Operation=sell.spare_parts.Operation,
+            model_name=sell.spare_parts.model.model_name,
+            car_compony_name=sell.spare_parts.model.car_compony.car_compony_name,
+            sell_spare_part_id=str(sell.sell_spare_parts_id)
+        )for sell in sells_spare]
+        return sells
     
     async def get_sell_spare_part_id_for_check(self,sell_spare_part_id:UUID):
        return self.sell_spare_part_repository.get_sell_spare_part_id_and_check(sell_spare_part_id=sell_spare_part_id)
